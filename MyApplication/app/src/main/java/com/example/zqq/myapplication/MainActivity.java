@@ -74,6 +74,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         secondLayout.setOnClickListener(MainActivity.this);
         thirdLayout.setOnClickListener(MainActivity.this);
         fourthLayout.setOnClickListener(MainActivity.this);
+        mine_l.setOnClickListener(MainActivity.this);
+
     }
     @Override
     public void onClick(View v) {
@@ -159,9 +161,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case 4:
 // fourthImage.setImageResource(R.drawable.XXXX);
-                fourthText.setTextColor(0x99ff0000);
+                mine_txt.setTextColor(0x99ff0000);
                 //   fourthLayout.setBackgroundColor(gray);
-                fourthImage.setBackgroundResource(R.mipmap.mine_selected);
+                mine_img.setBackgroundResource(R.mipmap.mine_selected);
                 if (fg5 == null) {
                     fg5 = new Home_Fragment();
                     fragmentTransaction.add(R.id.content, fg5);
@@ -179,19 +181,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      */
     private void clearChioce() {
 // firstImage.setImageResource(R.drawable.XXX);
-        firstText.setTextColor(gray);
+        firstText.setTextColor(0x99aaaaaa);
         firstImage.setBackgroundResource(R.mipmap.home);
        // firstLayout.setBackgroundColor(whirt);
 // secondImage.setImageResource(R.drawable.XXX);
-        secondText.setTextColor(gray);
+        secondText.setTextColor(0x99aaaaaa);
         secondImage.setBackgroundResource(R.mipmap.thumb);
        // secondLayout.setBackgroundColor(whirt);
 // thirdImage.setImageResource(R.drawable.XXX);
-        thirdText.setTextColor(gray);
+        thirdText.setTextColor(0x99aaaaaa);
         thirdImage.setBackgroundResource(R.mipmap.release);
        // thirdLayout.setBackgroundColor(whirt);
 // fourthImage.setImageResource(R.drawable.XXX);
-        fourthText.setTextColor(gray);
+        fourthText.setTextColor(0x99aaaaaa);
         fourthImage.setBackgroundResource(R.mipmap.messages);
        // fourthLayout.setBackgroundColor(whirt);
         mine_txt.setTextColor(0x99aaaaaa);

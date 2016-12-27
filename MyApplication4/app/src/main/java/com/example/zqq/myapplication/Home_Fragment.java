@@ -36,7 +36,10 @@ public class Home_Fragment  extends Fragment {
         String agrs1 = bundle.getString("agrs1");
         return view;
     }
+private void initView(View view)
+{
 
+}
 
 
 }

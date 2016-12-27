@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Home_Fragment">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/white"
+        app:tabTextColor="#cccccc"
+        app:tabIndicatorColor="#00000000"
+        app:tabSelectedTextColor="#555555"
+/>
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:id="@+id/Click_Add_a_data"
+    android:text="点击" />
+
+
+<android.support.v4.view.ViewPager
+android:id="@+id/view_pager"
+    android:layout_below="@id/tab_layout"
+app:layout_behavior="@string/appbar_scrolling_view_behavior"
+android:layout_width="match_parent"
+android:layout_height="match_parent"/>
 
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/tv_location"/>
-<EditText
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
 </RelativeLayout>
