@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,7 +44,7 @@ public class Fragment_First extends Fragment {
     private Second_Adapter second_adapter;
     //第三方刷新控件
     WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
-    ListVideoUtil listVideoUtil;
+    public ListVideoUtil listVideoUtil;
     FrameLayout videoFullContainer;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,7 +79,7 @@ public class Fragment_First extends Fragment {
 
         mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) v.findViewById(R.id.main_swipe);
 
-        second_adapter = new Second_Adapter(getActivity(), lists);
+        second_adapter = new Second_Adapter(getActivity(), lists,this,listVideoUtil);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
 
         home_rec.setLayoutManager(gridLayoutManager);
@@ -185,9 +186,11 @@ public class Fragment_First extends Fragment {
        // map.put("title",Datalist.get(0).get("title").toString());
        // lists.add(map);
         //将视频条目添加到集合类
+        Datalist.get(0).put("VideoList",listVideoUtil);
         lists.addAll(Datalist);
+
         listVideoUtil = new ListVideoUtil(getContext());
-        second_adapter.setListVideoUtil(listVideoUtil);
+       // second_adapter.setListVideoUtil(listVideoUtil);
         listVideoUtil.setFullViewContainer(videoFullContainer);
         listVideoUtil.setHideStatusBar(true);
 

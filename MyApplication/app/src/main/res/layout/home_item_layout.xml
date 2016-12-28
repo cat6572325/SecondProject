@@ -5,7 +5,9 @@
     android:layout_height="300dp"
     android:background="@android:color/white"
     >
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
     <FrameLayout
         android:id="@+id/list_item_container"
         android:layout_width="match_parent"
@@ -22,10 +24,12 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:src="@drawable/video_click_play_selector" />
+
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
+    android:id="@+id/framelayout_above_layout"
     >
     <ImageView
         android:layout_width="wrap_content"
@@ -57,4 +61,5 @@
         android:background="@mipmap/time_icon"
         />
 </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

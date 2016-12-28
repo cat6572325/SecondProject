@@ -9,20 +9,30 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:background="@android:color/white"
         app:tabTextColor="#cccccc"
+
         app:tabIndicatorColor="#00000000"
         app:tabSelectedTextColor="#555555"
 />
-<Button
+<RelativeLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
     android:id="@+id/Click_Add_a_data"
-    android:text="点击" />
+    android:background="#55aaaaaa"
+    >
 
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="25px"
 
+    android:text="点击"
+    android:src="@mipmap/triangle" />
+
+</RelativeLayout>
 <android.support.v4.view.ViewPager
 android:id="@+id/view_pager"
     android:layout_below="@id/tab_layout"
