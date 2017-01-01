@@ -4,19 +4,24 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity; // 注意这里我们导入的V4的包，不要导成app的包了
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.zqq.myapplication.NetWorks.Flop_Fragment_;
+
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     // 初始化顶部栏显示
     private ImageView titleLeftImv;
     private TextView titleTv;
     // 定义4个Fragment对象
     private Home_Fragment fg1;
-    private Home_Fragment fg2;
-    private Home_Fragment fg3;
+    private Flop_Fragment_ fg2;
+    private Release_Fragment fg3;
     private Home_Fragment fg4;
     private Home_Fragment fg5;
     // 帧布局对象，用来存放Fragment对象
@@ -34,6 +39,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private TextView secondText;
     private TextView thirdText;
     private TextView fourthText,mine_txt;
+    private LinearLayout uplayout;
     // 定义几个颜色
     private int whirt = 0xFFFFFFFF;
     private int gray = 0xFF7597B3;
@@ -69,6 +75,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mine_l=(RelativeLayout)findViewById(R.id.mine_layout);
         mine_img=(ImageView)findViewById(R.id.mine_image);
         mine_txt=(TextView)findViewById(R.id.mine_text);
+        uplayout=(LinearLayout)findViewById(R.id.uploading);
 
         firstLayout.setOnClickListener(MainActivity.this);
         secondLayout.setOnClickListener(MainActivity.this);
@@ -129,7 +136,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                // secondLayout.setBackgroundColor(gray);
                 secondImage.setBackgroundResource(R.mipmap.thumb_selected);
                 if (fg2 == null) {
-                    fg2 = new Home_Fragment();
+                    fg2 = new Flop_Fragment_();
                     fragmentTransaction.add(R.id.content, fg2);
                 } else {
                     fragmentTransaction.show(fg2);
@@ -141,10 +148,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
               //  thirdLayout.setBackgroundColor(gray);
                 thirdImage.setBackgroundResource(R.mipmap.release_selected);
                 if (fg3 == null) {
-                    fg3 = new Home_Fragment();
-                    fragmentTransaction.add(R.id.content, fg3);
+                    //fg3 = new Release_Fragment();
+                   // fragmentTransaction.add(R.id.content, fg3);
+                    startActivity(new Intent(MainActivity.this,Round_Video_.class));
+                    //将显示一个ftagment改成跳往一个activity
                 } else {
-                    fragmentTransaction.show(fg3);
+                    startActivity(new Intent(MainActivity.this,Round_Video_.class));
+
+                   // fragmentTransaction.show(fg3);
                 }
                 break;
             case 3:
@@ -156,6 +167,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     fg4 = new Home_Fragment();
                     fragmentTransaction.add(R.id.content, fg4);
                 } else {
+
                     fragmentTransaction.show(fg4);
                 }
                 break;
@@ -220,5 +232,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (fg5 != null) {
             fragmentTransaction.hide(fg5);
         }
+    }
+    public void HideUploadIng(View view)
+    {
+        uplayout.setVisibility(View.INVISIBLE);
     }
 }

@@ -4,22 +4,28 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Explode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zqq.myapplication.Adapters.Second_Adapter;
 import com.example.zqq.myapplication.Llisteners.SampleListener;
+import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.R;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
@@ -35,6 +41,19 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
  * Created by zqq on 16-12-27.
  */
 public class Fragment_First extends Fragment {
+    public Handler mHandler=new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    String json=(String)msg.obj;
+                    Log.e("视频json",json);
+                    break;
+            }
+        }
+    };
     int lastVisibleItem;
     int firstVisibleItem;
     LinearLayoutManager linearLayoutManager;
@@ -45,12 +64,19 @@ public class Fragment_First extends Fragment {
     //第三方刷新控件
     WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
     public ListVideoUtil listVideoUtil;
+    Get_Http_AsycTask get_http_asycTask;
     FrameLayout videoFullContainer;
-    @Override
+     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.home_fragments_layout, container, false);
-        //   Bundle bundle = getArguments();
+        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+             getActivity().getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+             getActivity(). getWindow().setEnterTransition(new Explode());
+             getActivity().  getWindow().setExitTransition(new Explode());
+         }*/
+
+         v = inflater.inflate(R.layout.home_fragments_layout, container, false);
+       //   Bundle bundle = getArguments();
         // String agrs1 = bundle.getString("agrs1");
 
         //  tv.setText(agrs1);
@@ -63,16 +89,10 @@ public class Fragment_First extends Fragment {
     private void initView(View view) {
          videoFullContainer=(FrameLayout) view.findViewById(R.id.video_full_container);
         // 设置一个exit transition
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-           getActivity(). getWindow().setEnterTransition(new Explode());
-          getActivity().  getWindow().setExitTransition(new Explode());
-        }
-        listVideoUtil = new ListVideoUtil(getContext());
+         listVideoUtil = new ListVideoUtil(getContext());
         listVideoUtil.setFullViewContainer(videoFullContainer);
 
         listVideoUtil.setHideActionBar(true);
-
 
 
         home_rec = (RecyclerView) view.findViewById(R.id.fragments_First_rv);
@@ -167,8 +187,7 @@ public class Fragment_First extends Fragment {
 
     }
         private class Task extends AsyncTask<Void, Void, String[]> {
-
-            @Override
+               @Override
             protected String[] doInBackground(Void... params) {
                 return new String[0];
             }
@@ -179,6 +198,21 @@ public class Fragment_First extends Fragment {
                 super.onPostExecute(result);
             }
         }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getVideos();
+    }
+
+    private void getVideos()
+    {//TODO 调用Asynstask启动线程加载数据
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("handler",mHandler);
+        MyAsycTask myAsycTask=new MyAsycTask(map);
+        myAsycTask.execute("http://192.168.1.109:3333/video/?per=1&page=1");
+        //启动线程联网后就返回
+    }
     public void AddData(ArrayList<HashMap<String,Object>> Datalist)
     {
 
@@ -193,9 +227,29 @@ public class Fragment_First extends Fragment {
        // second_adapter.setListVideoUtil(listVideoUtil);
         listVideoUtil.setFullViewContainer(videoFullContainer);
         listVideoUtil.setHideStatusBar(true);
-
-
        second_adapter.notifyDataSetChanged();
+    }
+    class MyAsycTask extends AsyncTask<String,Void,String>
+    {//TODO 异步
+         HashMap<String,Object> map;
+        public MyAsycTask(HashMap<String,Object> map)
+            {
+                this.map=map;
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            get_http_asycTask=new Get_Http_AsycTask();
+            get_http_asycTask.gethttp(params[0],map);//get方法链接http
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+        }
 
     }
 

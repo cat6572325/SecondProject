@@ -1,4 +1,4 @@
-package com.example.zqq.myapplication.Llisteners;
+package com.example.zqq.myapplication;
 
 import android.annotation.TargetApi;
 import android.app.*;
@@ -39,6 +39,15 @@ import java.util.concurrent.TimeUnit;
 import android.hardware.Camera;
 import android.support.design.widget.*;
 
+import com.example.zqq.myapplication.FileUtils.File_with_;
+import com.example.zqq.myapplication.NetWorks.Post_Http;
+import com.example.zqq.myapplication.Users.User;
+import com.example.zqq.myapplication.Utils.CameraUtils;
+import com.okhttplib.HttpInfo;
+import com.okhttplib.OkHttpUtil;
+import com.okhttplib.OkHttpUtilInterface;
+import com.okhttplib.annotation.CacheLevel;
+import com.okhttplib.callback.ProgressCallback;
 import java.io.IOException;
 import java.util.List;
 
@@ -67,9 +76,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.zqq.myapplication.FileUtils.File_with_;
-import com.example.zqq.myapplication.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,7 +87,8 @@ public class Round_Video_ extends Activity
             Bundle bundle = msg.getData();
             switch (msg.what) {
                 case 0:
-        if (bundle.getString("?").equals("success")) {
+
+                     if (bundle.getString("?").equals("success")) {
 
                     }
                     if (bundle.getString("?").equals("ing")) {
@@ -112,8 +119,8 @@ public class Round_Video_ extends Activity
         }
     };
 
-    //User user = new User();
-     static int message = 0;
+    User user = new User();
+   static int message = 0;
     private Button startButton, stopButton, playButton;
     private SurfaceView mSurfaceView;
     private boolean isRecording;
@@ -131,17 +138,19 @@ public class Round_Video_ extends Activity
     TextView top_time;
     int minute, min;
     Size size;
-     ImageView sound, turnC, round_back_img, rounding_time_img, round_delete, round_upload, round_edit;
+    task Prog_task;
+    ImageView sound, turnC, round_back_img, rounding_time_img, round_delete, round_upload, round_edit;
     AlertDialog.Builder waitdialog;
     AlertDialog dialog;
-     @Override
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO: Implement this method
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.round_layout);
         mSurfaceView = (SurfaceView) findViewById(R.id.camera_surfaceview);
-        // 声明Surface不维护自己的缓冲区，针对Android3.0以下设备支持
+         // 声明Surface不维护自己的缓冲区，针对Android3.0以下设备支持
         mSurfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         initView();
 
@@ -153,8 +162,8 @@ public class Round_Video_ extends Activity
                 if (flag == 0) {
 
                     if (camera != null)
-                        sound.setVisibility(View.INVISIBLE);
-                    turnC.setVisibility(View.INVISIBLE);
+                       // sound.setVisibility(View.INVISIBLE);
+              //      turnC.setVisibility(View.INVISIBLE);
 
                     if (camera != null) {
                         camera.stopPreview();
@@ -168,8 +177,7 @@ public class Round_Video_ extends Activity
                 } else {//点击结束录像
                     stop();
                     flag = 0;
-                   }
-
+                }
 
             }
         });
@@ -179,23 +187,17 @@ public class Round_Video_ extends Activity
 
     public void initView() {
         top_time = (TextView) this.findViewById(R.id.RoundTop_time);
-      //  sound = (ImageView) this.findViewById(R.id.Round_sound);
-       // turnC = (ImageView) this.findViewById(R.id.Round_turn);
+        turnC = (ImageView) this.findViewById(R.id.Round_turn);
+        startButton=(Button)this.findViewById(R.id.start_round);
         round_back_img = (ImageView) this.findViewById(R.id.round_back);
         rounding_time_img = (ImageView) this.findViewById(R.id.rounding_time_img);
-        round_upload = (ImageView) this.findViewById(R.id.round_upload);
-        round_edit = (ImageView) this.findViewById(R.id.round_edit);
-        round_delete.setClickable(false);//删除按钮初始不可点击
-        round_back_img.setOnClickListener(new OnClickListener() {
+         round_back_img.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
-        //初始隐藏这个布局
-        HideLayout.setVisibility(View.INVISIBLE);
-        //隐藏(不可见)
-        mHandler.sendEmptyMessage(1);
+       mHandler.sendEmptyMessage(1);
 
 
     }//initView
@@ -260,24 +262,18 @@ public class Round_Video_ extends Activity
         }
         return str;
     }
-  /*  private void setWaitdialog()
+    private void setWaitdialog()
     {
-        waitdialog=new android.support.v7.app.AlertDialog.Builder(Round_Video_.this,R.style.Dialog);
-        LayoutInflater inflater=getLayoutInflater();
-        final View layout=inflater.inflate(R.layout.login_wait_dialog,null);
-        TextView textView=(TextView)layout.findViewById(R.id.text_dialog);
+       // waitdialog=new android.support.v7.app.AlertDialog.Builder(Round_Video_.this,R.style.Dialog);
+       // LayoutInflater inflater=getLayoutInflater();
+       // final View layout=inflater.inflate(R.layout.login_wait_dialog,null);
+      //  TextView textView=(TextView)layout.findViewById(R.id.text_dialog);
 
-        textView.setText("加载中..");
-        waitdialog.setView(layout);
-        dialog=waitdialog.create();
-        dialog.show();
+     //   textView.setText("加载中..");
+      //  waitdialog.setView(layout);
+      //  dialog=waitdialog.create();
+      //  dialog.show();
 
-    }
-    public void setprog() {
-        Prog_task = new task(count, bar);
-        //新建一个方法
-        mTimer.schedule(Prog_task, 2000, 1000);
-        //设每一秒调用一次
     }
 
 
@@ -286,11 +282,9 @@ public class Round_Video_ extends Activity
         int x, y;
         boolean b;
         int count;
-        RoundProgressBar bar;
 
-        public task(int count, RoundProgressBar bar) {
+        public task(int count) {
             this.count = count;
-            this.bar = bar;
         }
 
         @Override
@@ -300,70 +294,34 @@ public class Round_Video_ extends Activity
                 @Override
                 public void run() {
 
-                    if (bar.getProgress() == 150)
-                        maxtimemessage(bar);
-                    if (bar.getProgress() == 200)
-                        maxtimemessage(bar);
-                    if (bar.getProgress() == 290)
-                        maxtimemessage(bar);
-                    if (bar.getProgress() == 300) {
-                        stop();
-                        mTimer.cancel();
-                        cancel();
-                    }else {
-                        bar.setProgress(bar.getProgress() + 1);
-                        min++;
-                        if (min == 60) {
-                            min = 0;
-                            minute++;
-                        }
-                        if (min > 9) {
-                            top_time.setText(minute + ":" + min);
-                        } else {
-                            top_time.setText(minute + ":0" + min);
-                        }
+                    min++;
+                    if (min == 60) {
+                        min = 0;
+                        minute++;
+                    }
+                    if (min > 9) {
+                        top_time.setText(minute + ":" + min);
+                    } else {
+                        top_time.setText(minute + ":0" + min);
                     }
                 }
+
             });
         }
-    }
 
+    }
     ;
 
 
-    public void maxtimemessage(RoundProgressBar bar) {
-        if (message == 0)
-            Snackbar.make(bar, "请注意录制时长", Snackbar.LENGTH_SHORT).setAction("不再提示",
-                    new View.OnClickListener() {
-                        public void onClick(View v) {
-                            message = 1;
-                        }
-                    }).show();
-    }*/
 
     protected void start() {
-     //   round_back_img.setBackgroundResource(R.drawable.close);
         round_back_img.setClickable(false);
-    //    rounding_time_img.setBackgroundResource(R.drawable.times);
         try {
 
             if (file_with != null) {//如果先前已经申请过一个文件
                 file_with.DeleteFile();
             }
             file_with = new File_with_();
-            //新建对象
-
-            DisplayMetrics dm = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(dm);
-            mediaRecorder = new MediaRecorder();// 创建mediarecorder对象
-            //摄像头旋转90度
-
-            WindowManager wm = (WindowManager) Round_Video_.this
-                    .getSystemService(Context.WINDOW_SERVICE);
-
-            int width = wm.getDefaultDisplay().getWidth();
-            int height = wm.getDefaultDisplay().getHeight();
-            Camera.Size bestSize = null;
 
             if (turncamera == 0) {
                 camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
@@ -372,14 +330,6 @@ public class Round_Video_ extends Activity
             }
             Camera.Parameters mParams = camera.getParameters();
             List<Camera.Size> sizeList = camera.getParameters().getSupportedPreviewSizes();
-            bestSize = sizeList.get(0);
-
-            for (int i = 1; i < sizeList.size(); i++) {
-                if ((sizeList.get(i).width * sizeList.get(i).height) >
-                        (bestSize.width * bestSize.height)) {
-                    bestSize = sizeList.get(i);
-                }
-            }
             //	mParams.setPreviewSize(mSurfaceView.getWidth(),mSurfaceView.getHeight());
             //camera.setParameters(mParams);
             //camera.startPreview();
@@ -411,7 +361,7 @@ public class Round_Video_ extends Activity
             //设置高质量录制,改变码率
             mediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024);
             //设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错
-            mediaRecorder.setVideoSize(640, 480);
+            mediaRecorder.setVideoSize(1080, 720);
             // 设置录制的视频帧率。必须放在设置编码和格式的后面，否则报错
             mediaRecorder.setVideoFrameRate(20);
             // 设置视频文件输出的路径
@@ -444,8 +394,7 @@ public class Round_Video_ extends Activity
     }
 
     protected void stop() {
-   //     rounding_time_img.setBackgroundResource(R.drawable.timer);
-        bottom_hide_layout.setVisibility(View.INVISIBLE);
+          bottom_hide_layout.setVisibility(View.INVISIBLE);
         //隐藏录制按钮的布局
         HideLayout.setVisibility(View.VISIBLE);
         //显示上层的上传按钮的布局
@@ -497,8 +446,12 @@ public class Round_Video_ extends Activity
             } else {
                 camera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
             }
+            camera.setPreviewDisplay(mSurfaceView.getHolder());
+
             camera.setDisplayOrientation(90);
             camera.setPreviewDisplay(mSurfaceView.getHolder());
+            updateCameraParameters();
+
             camera.startPreview();
 
 
@@ -509,6 +462,92 @@ public class Round_Video_ extends Activity
             Log.e("初始化摄像头时",e.toString());
         }
     }
+    private void updateCameraParameters() {
+        if (camera != null) {
+            Camera.Parameters p = camera.getParameters();
+
+            long time = new Date().getTime();
+            p.setGpsTimestamp(time);
+
+            //以下几行代码获得适合的预览尺寸
+          //  Size pictureS = CameraUtils.getInstance().getPreviewSize(p.getSupportedPreviewSizes(), 700);
+         Camera.Size sizes=getCloselyPreSize(mSurfaceView.getWidth(),mSurfaceView.getHeight(),p.getSupportedPreviewSizes());
+            p.setPreviewSize(sizes.width, sizes.height);
+            camera.setParameters(p);
+
+          /*  Size pictureSize = findBestPictureSize(p);
+            p.setPictureSize(pictureSize.width, pictureSize.height);
+
+            // Set the preview frame aspect ratio according to the picture size.
+            Size size = p.getPictureSize();
+         //   PreviewFrameLayout frameLayout = (PreviewFrameLayout) findViewById(R.id.frame_layout);
+        //    frameLayout.setAspectRatio((double) size.width / size.height);
+
+            Size previewSize = findBestPreviewSize(p);
+         //   p.setPreviewSize(previewSize.width,previewSize.height);
+
+            camera.setParameters(p);
+
+          //  int supportPreviewWidth = previewSize.width;
+          //  int supportPreviewHeight = previewSize.height;
+
+            int srcWidth = getScreenWH().widthPixels;
+            int srcHeight = getScreenWH().heightPixels;
+
+            int width = Math.min(srcWidth, srcHeight);
+          //  int height = width * supportPreviewWidth / supportPreviewHeight ;
+*/
+           // mSurfaceView.setLayoutParams(new FrameLayout.LayoutParams(height, width));//
+        }
+    }
+    /**
+     * 通过对比得到与宽高比最接近的尺寸（如果有相同尺寸，优先选择）
+     *
+     * @param surfaceWidth
+     *            需要被进行对比的原宽
+     * @param surfaceHeight
+     *            需要被进行对比的原高
+     * @param preSizeList
+     *            需要对比的预览尺寸列表
+     * @return 得到与原宽高比例最接近的尺寸
+     */
+    protected Camera.Size getCloselyPreSize(int surfaceWidth, int surfaceHeight,
+                                            List<Size> preSizeList) {
+
+        int ReqTmpWidth;
+        int ReqTmpHeight;
+        // 当屏幕为垂直的时候需要把宽高值进行调换，保证宽大于高
+     //   if (mIsPortrait) {
+            ReqTmpWidth = surfaceHeight;
+            ReqTmpHeight = surfaceWidth;
+      /*  } else {
+            ReqTmpWidth = surfaceWidth;
+            ReqTmpHeight = surfaceHeight;
+        }*/
+        //先查找preview中是否存在与surfaceview相同宽高的尺寸
+        for(Camera.Size size : preSizeList){
+            if((size.width == ReqTmpWidth) && (size.height == ReqTmpHeight)){
+                return size;
+            }
+        }
+
+        // 得到与传入的宽高比最接近的size
+        float reqRatio = ((float) ReqTmpWidth) / ReqTmpHeight;
+        float curRatio, deltaRatio;
+        float deltaRatioMin = Float.MAX_VALUE;
+        Camera.Size retSize = null;
+        for (Camera.Size size : preSizeList) {
+            curRatio = ((float) size.width) / size.height;
+            deltaRatio = Math.abs(reqRatio - curRatio);
+            if (deltaRatio < deltaRatioMin) {
+                deltaRatioMin = deltaRatio;
+                retSize = size;
+            }
+        }
+
+        return retSize;
+    }
+
 
     //////////////////sucess Onclick
     public void Turncamera(View v) {
@@ -583,11 +622,29 @@ public class Round_Video_ extends Activity
         int y = counttime;
     }
 
+    public void delete(View v) {
+        //TODO 删除按钮
 
+        if(file_with.GetFile().exists()) {
+         //   Message_Dialog editNameDialog = new Message_Dialog(Round_Video_.this, file_with.TestFile(file).getPath(), v);
+            //向对话框传递上下文和文件路径(用于删除）
+         //   editNameDialog.show(getFragmentManager(), "EditNameDialog");
+            turncamera = 0;
+            ResetCamera();
+        }else
+        {
+            Toast.makeText(Round_Video_.this,"没有视频可删除,需要录制吗？",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void upload(View v) {
+        //TODO　上传按钮
+
+    }
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        super.onBackPressed();
         //
         // 按钮保存数据，未上传时按下返回键就会开始联网发送未上传视频的信息，发送保存成功后收到一个handler的message然后直接finish
         //大多需要的参数都在User的对象里了，一旦上传则清空
@@ -595,9 +652,9 @@ public class Round_Video_ extends Activity
         if (camera != null) {
             camera=null;
         }
+        finish();
 
-   //     User u = new User();
-         }
+    }
 
     public void edit(View v) {
         //TODO 编辑按钮
@@ -641,8 +698,23 @@ public class Round_Video_ extends Activity
         dMetrics = this.getResources().getDisplayMetrics();
         return dMetrics;
     }
+    public void JumpToEdit(View view)
+    {//录制完成后是否跳往编辑界面
 
+    }
+    //TODO 上传 VVVVVVVVVVVVVVVVV
+    private void upLoad()
+    {
+        HashMap<String ,Object> map=new HashMap<>();
+        map.put("handler",mHandler);
+        map.put("path",file_with.GetFile().getPath());
+        map.put("videourl","http://192.168.1.109:3333/video/push/:videoId?token=${token}");
+        map.put("title","");
+        Post_Http post_http=new Post_Http(map);
+        post_http.loadvideopng();//启动上传三步骤
 
+    }
+    //TODO 上传 AAAAAAAAAAAAAAAA
     //TODO 视频处理　　vvvvvvvvvv
     private void exactorMedia(String... data) {
         FileOutputStream videoOutputStream = null;

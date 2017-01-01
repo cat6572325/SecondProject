@@ -15,8 +15,8 @@
         android:background="@mipmap/ic_launcher">
         <SurfaceView
             android:id="@+id/camera_surfaceview"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:id="@+id/bottom_hide_layout"
@@ -25,61 +25,27 @@
             android:layout_alignParentBottom="true"
             android:background="#22000000">
 
-         <Button
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_centerInParent="true"
-             android:id="@+id/start_round"
-             android:text="点击开始录像"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/HideLayout"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_alignParentBottom="true"
-
-            android:background="#88555555">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:layout_alignParentBottom="true"
-
-                android:layout_alignParentRight="false"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/round_delete"
-                    android:layout_width="wrap_content"
 
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="40dp"
-                     android:onClick="delete" />
-
-                <ImageView
-                    android:id="@+id/round_upload"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                <Button
+                    android:id="@+id/start_round"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_margin="10dp"
-                    android:onClick="upload" />
+                    android:background="@drawable/yuanjiao"
+                    />
 
-                <ImageView
-                    android:id="@+id/round_edit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="40dp"
-                     android:nestedScrollingEnabled="false"
-                    android:onClick="edit" />
+            </LinearLayout>
 
-            </RelativeLayout>
         </RelativeLayout>
+
+
+
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -92,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
+            android:background="@mipmap/back"
             />
 
         <LinearLayout
@@ -118,6 +85,27 @@
                 android:textColor="#ffffff"
                 android:textSize="30sp" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/Round_flash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="SetsoundState"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="200px"
+            android:background="@mipmap/flashlight" />
+
+        <ImageView
+            android:id="@+id/Round_turn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@mipmap/camera"
+            android:layout_marginRight="80px"
+            android:layout_centerVertical="true"
+            android:onClick="Turncamera" />
+
+
 
     </RelativeLayout>
 

@@ -6,16 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
    >
-    <FrameLayout
-        android:id="@+id/content"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/white"></FrameLayout>
-    <!--3. 底部的四个选项菜单-->
-    <LinearLayout
+        android:layout_height="match_parent">
+     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+         android:layout_alignParentBottom="true"
+         android:id="@+id/lis"
         android:background="#FFFFFF">
         <!--四个部分都一样：ImageView + TextView-->
         <RelativeLayout
@@ -152,4 +150,48 @@
         </LinearLayout>
     </RelativeLayout>
     </LinearLayout>
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_above="@id/lis"
+        android:background="@android:color/white"/>
+    <!--3. 底部的四个选项菜单-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#55000000"
+            android:gravity="bottom"
+            android:id="@+id/uploading"
+            android:layout_above="@id/lis">
+              <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+
+                android:gravity="center_vertical">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:id="@+id/progress"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/progress"
+                android:text="上传中.."/>
+                  <Button
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerVertical="true"
+                      android:layout_alignParentRight="true"
+                      android:onClick="HideUploadIng"
+                      android:text="取消"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+</RelativeLayout>
 </LinearLayout>
