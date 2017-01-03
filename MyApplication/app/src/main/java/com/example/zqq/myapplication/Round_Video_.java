@@ -14,6 +14,8 @@ import android.media.audiofx.EnvironmentalReverb;
 import android.os.*;
 
 import android.provider.MediaStore;
+import android.support.v4.app.*;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.app.*;
 import android.support.v7.app.AlertDialog;
@@ -79,7 +81,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Round_Video_ extends Activity
+public class Round_Video_ extends FragmentActivity
 
 {
     public Handler mHandler = new Handler() {
@@ -87,16 +89,7 @@ public class Round_Video_ extends Activity
             Bundle bundle = msg.getData();
             switch (msg.what) {
                 case 0:
-
-                     if (bundle.getString("?").equals("success")) {
-
-                    }
-                    if (bundle.getString("?").equals("ing")) {
-                    }
-                    if (bundle.getString("?").equals("error")) {
-                    }
-
-                    finish();
+                    upload(msg.obj.toString());
                     break;
 
 
@@ -119,8 +112,10 @@ public class Round_Video_ extends Activity
         }
     };
 
+    Video_Data_ video_data_;
     User user = new User();
    static int message = 0;
+    EditText title_e;
     private Button startButton, stopButton, playButton;
     private SurfaceView mSurfaceView;
     private boolean isRecording;
@@ -142,6 +137,8 @@ public class Round_Video_ extends Activity
     ImageView sound, turnC, round_back_img, rounding_time_img, round_delete, round_upload, round_edit;
     AlertDialog.Builder waitdialog;
     AlertDialog dialog;
+    // 定义FragmentManager对象管理器
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,10 +147,12 @@ public class Round_Video_ extends Activity
 
         setContentView(R.layout.round_layout);
         mSurfaceView = (SurfaceView) findViewById(R.id.camera_surfaceview);
-         // 声明Surface不维护自己的缓冲区，针对Android3.0以下设备支持
+        fragmentManager = getSupportFragmentManager();
+
+
+        // 声明Surface不维护自己的缓冲区，针对Android3.0以下设备支持
         mSurfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         initView();
-
 
         startButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
@@ -184,7 +183,17 @@ public class Round_Video_ extends Activity
 
     }//oncreate()
 
+    private void setDefaultFragment()
+    {
 
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                //firstLayout.setBackgroundColor(gray);
+              if (video_data_ == null) {
+                  video_data_ = new Video_Data_();
+                  fragmentTransaction.add(R.id.Round_Framelayout, video_data_);
+                  fragmentTransaction.commit(); // 提交
+              }
+    }
     public void initView() {
         top_time = (TextView) this.findViewById(R.id.RoundTop_time);
         turnC = (ImageView) this.findViewById(R.id.Round_turn);
@@ -322,21 +331,21 @@ public class Round_Video_ extends Activity
                 file_with.DeleteFile();
             }
             file_with = new File_with_();
+            mediaRecorder = new MediaRecorder();// 创建mediarecorder对象
 
             if (turncamera == 0) {
                 camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
             } else {
                 camera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
             }
-            Camera.Parameters mParams = camera.getParameters();
-            List<Camera.Size> sizeList = camera.getParameters().getSupportedPreviewSizes();
-            //	mParams.setPreviewSize(mSurfaceView.getWidth(),mSurfaceView.getHeight());
-            //camera.setParameters(mParams);
-            //camera.startPreview();
+            camera.setPreviewDisplay(mSurfaceView.getHolder());
+
             camera.setDisplayOrientation(90);
+
+            camera.setPreviewDisplay(mSurfaceView.getHolder());
+            updateCameraParameters();
             camera.unlock();
-            //	Size pictureS = MyCampara.getInstance().getPictureSize(pictureSizes, 800);
-            //	mParams.setPictureSize(pictureS.width, pictureS.height);
+           // camera.startPreview();
             mediaRecorder.setCamera(camera);
             // 设置录制视频源为Camera(相机)
             if (recordarl == 0) {
@@ -394,11 +403,8 @@ public class Round_Video_ extends Activity
     }
 
     protected void stop() {
-          bottom_hide_layout.setVisibility(View.INVISIBLE);
-        //隐藏录制按钮的布局
-        HideLayout.setVisibility(View.VISIBLE);
-        //显示上层的上传按钮的布局
-        //解除隐藏
+       setDefaultFragment();
+         //解除隐藏
         top_time.setText("录制完成");
         if (isRecording) {
             // 如果正在录制，停止并释放资源
@@ -414,8 +420,6 @@ public class Round_Video_ extends Activity
             }
 
         }
-        round_delete.setClickable(true);
-        round_back_img.setClickable(true);
     }
 
     @Override
@@ -622,23 +626,21 @@ public class Round_Video_ extends Activity
         int y = counttime;
     }
 
-    public void delete(View v) {
-        //TODO 删除按钮
 
-        if(file_with.GetFile().exists()) {
-         //   Message_Dialog editNameDialog = new Message_Dialog(Round_Video_.this, file_with.TestFile(file).getPath(), v);
-            //向对话框传递上下文和文件路径(用于删除）
-         //   editNameDialog.show(getFragmentManager(), "EditNameDialog");
-            turncamera = 0;
-            ResetCamera();
-        }else
-        {
-            Toast.makeText(Round_Video_.this,"没有视频可删除,需要录制吗？",Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    public void upload(View v) {
+    public void upload(String title) {
         //TODO　上传按钮
+        //跳转至首页上传
+        Intent intent = this.getIntent();
+
+        user=new User();
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("title",title);
+        map.put("path",file_with.GetFile().getPath());
+        map.put("videourl","http://192.168.1.109:3333/video/push/:videoId?token=${token}");
+        user.wait_UpLoad=map;
+        this.setResult(0, intent);//返回页面1
+        onBackPressed();
 
     }
 
@@ -698,23 +700,8 @@ public class Round_Video_ extends Activity
         dMetrics = this.getResources().getDisplayMetrics();
         return dMetrics;
     }
-    public void JumpToEdit(View view)
-    {//录制完成后是否跳往编辑界面
 
-    }
-    //TODO 上传 VVVVVVVVVVVVVVVVV
-    private void upLoad()
-    {
-        HashMap<String ,Object> map=new HashMap<>();
-        map.put("handler",mHandler);
-        map.put("path",file_with.GetFile().getPath());
-        map.put("videourl","http://192.168.1.109:3333/video/push/:videoId?token=${token}");
-        map.put("title","");
-        Post_Http post_http=new Post_Http(map);
-        post_http.loadvideopng();//启动上传三步骤
 
-    }
-    //TODO 上传 AAAAAAAAAAAAAAAA
     //TODO 视频处理　　vvvvvvvvvv
     private void exactorMedia(String... data) {
         FileOutputStream videoOutputStream = null;

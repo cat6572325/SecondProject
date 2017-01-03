@@ -6,6 +6,8 @@ import android.media.*;
 import android.os.*;
 import android.provider.*;
 import android.util.*;
+
+import com.example.zqq.myapplication.Users.User;
 import com.socks.okhttp.plus.*;
 import com.socks.okhttp.plus.listener.*;
 import com.socks.okhttp.plus.model.*;
@@ -39,6 +41,7 @@ HashMap<String,Object> map;
     {
         final Message msg=new Message();
         final Bundle bundle=new Bundle();
+        User user=new User();
         final File file = new File(map.get("path").toString());//Environment.getExternalStorageDirectory(), "jiandan02.jpg");
         if (!file.exists()) {
             //  Toast.makeText(con.this, "File not exits！", Toast.LENGTH_SHORT).show();
@@ -46,10 +49,12 @@ HashMap<String,Object> map;
         }
 
         Map<String, String> param = new HashMap<>();
-        Pair<String, File> pair = new Pair("null", file);
+        Pair<String, File> pair = new Pair("video", file);
+        param.put("file","videofile");
+
         OkHttpProxy
                 .upload()
-                .url(map.get("videourl").toString()+_id)
+                .url("http://192.168.1.109:3333/user/video/push/"+_id+"?token="+user.token)
                 .file(pair)
                 .setParams(param)
                 .setWriteTimeOut(20)
@@ -102,9 +107,9 @@ HashMap<String,Object> map;
                         Log.e("bbbb",String.valueOf(e));
                         bundle.putString("?","error");
                         bundle.putString("!",e.toString());
-                        msg.what=0;
-                        msg.setData(bundle);
-                        handler.sendMessage(msg);
+                      //  msg.what=0;
+                       // msg.setData(bundle);
+                       // handler.sendMessage(msg);
                     }
 
                     @Override
@@ -163,9 +168,9 @@ HashMap<String,Object> map;
             jsonObject=new JSONObject(str);
 
           pul(jsonObject.get("_id").toString());
-             msg.what=0;
-            msg.setData(bundle);
-            handler.sendMessage(msg);
+         //    msg.what=0;
+         //   msg.setData(bundle);
+          //  handler.sendMessage(msg);
 
 
 
@@ -188,6 +193,7 @@ HashMap<String,Object> map;
     }
     public void loadvideopng()
     {
+        User user=new User();
         String path=map.get("path").toString();
         String str=path.substring(0,path.lastIndexOf(".")-1);
         File f=new File(str+((int)(1+Math.random()*(10-1+1)))+".png");
@@ -204,7 +210,7 @@ HashMap<String,Object> map;
         Pair<String, File> pair = new Pair("cover", f);
         OkHttpProxy
                 .upload()
-                .url("http://192.168.1.109:3333/video/cover")
+                .url("http://192.168.1.109:3333/user/video/cover?token="+user.token)
                 .file(pair)
                 .setParams(param)
                 .setWriteTimeOut(20)
@@ -218,17 +224,24 @@ HashMap<String,Object> map;
                     @Override
                     public void onResponse(Call call, okhttp3.Response response) throws IOException {
                         String str=response.body().string();
-
-
                         Log.e("videophonto",str);
                         Log.e("完成", String.valueOf(response.isSuccessful()));
+
+                        try {
+                            User user=new User();
+                            JSONObject jsonObject=null;
+                            jsonObject=new JSONObject(str);
                         HashMap<String,Object> map =new HashMap<String,Object>();
+
                         handler=(Handler) map.get("handler");
                         //将截图id和url传过去
-                        videodata("http://localhost:3333/user/video/detail?scsId=${scsId}&token=${token}");
+                        videodata("http://192.168.1.109:3333/user/video/detail?scsId="+jsonObject.getString("_id")+"&token="+user.token);
 
-
+                    } catch (JSONException e) {
+                        Log.e("上传截图",e.toString());
                     }
+
+                }
 
 
                     @Override
@@ -250,7 +263,56 @@ HashMap<String,Object> map;
 
 
     }
+    public void Post_Http(String url,RequestBody formBody)
+    {
+        OkHttpClient client=new OkHttpClient();
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+        String str = null;
+        handler=(Handler)map.get("handler");
+        Response response = null;
+        try {
 
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(formBody)
+                    .build();
+            Log.e("url",url);
+            try
+            {
+                response = client.newCall(request).execute();
+            }
+            catch (IOException e)
+            {
+                Log.e("注册时",e.toString());
+            }
+            //if (!response.isSuccessful())
+            str = response.body().string();
+            Log.e("post",str);
+            jsonObject=new JSONObject(str);
+            msg=new Message();
+               msg.what=(Integer)map.get("what");
+              msg.obj=jsonObject;
+             handler.sendMessage(msg);
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("post",e.toString());
+
+
+        } catch(JSONException e)
+        {
+            Log.e("post",e.toString());
+        }
+        finally {
+
+
+        }
+
+    }
 
     //使用Bitmap加Matrix来缩放
     public static Bitmap resizeImage(Bitmap bitmap, int w, int h)

@@ -113,7 +113,7 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
                 //    holder.infoDetails_relativelayout.setTag(lists.get(position).get("vdoPhotourl").toString());
                 //设置内容背景图
                 holder.setListVideoUtil(listVideoUtil);
-                holder.onBind(position, "tag", holder, this);
+                holder.onBind(position, lists.get(position).get("vid_url").toString(), holder, this);
                 if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override

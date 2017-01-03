@@ -39,6 +39,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Round_Video_"></activity>
+        <activity android:name=".Register_"></activity>
     </application>
 
 </manifest>

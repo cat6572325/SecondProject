@@ -5,10 +5,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-
-
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,12 +54,15 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
+
             android:background="@mipmap/back"
             />
 
         <LinearLayout
             android:layout_width="wrap_content"
-
+android:layout_gravity="center_horizontal|center_vertical"
+            android:id="@+id/timertop"
+            android:layout_marginRight="50dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
 
@@ -89,24 +88,29 @@
             android:id="@+id/Round_flash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:onClick="SetsoundState"
+            android:layout_toRightOf="@id/timertop"
             android:layout_centerVertical="true"
-            android:layout_marginRight="200px"
+            android:onClick="SetsoundState"
             android:background="@mipmap/flashlight" />
 
         <ImageView
             android:id="@+id/Round_turn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@mipmap/camera"
-            android:layout_marginRight="80px"
             android:layout_centerVertical="true"
+            android:background="@mipmap/camera"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
             android:onClick="Turncamera" />
 
 
 
     </RelativeLayout>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/Round_Framelayout"
+    android:background="@android:color/white">
 
+</FrameLayout>
 </RelativeLayout>

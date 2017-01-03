@@ -1,20 +1,40 @@
 package com.example.zqq.myapplication;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity; // 注意这里我们导入的V4的包，不要导成app的包了
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zqq.myapplication.NetWorks.Flop_Fragment_;
+import com.example.zqq.myapplication.NetWorks.Post_Http;
+import com.example.zqq.myapplication.Users.User;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+import java.util.HashMap;
+
+public class MainActivity extends FragmentActivity implements View.OnClickListener{
+
+    public Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            Bundle bundle = msg.getData();
+            switch (msg.what) {
+                case 0:
+
+                    break;
+            }
+        }
+    };
+                    User user;
     // 初始化顶部栏显示
     private ImageView titleLeftImv;
     private TextView titleTv;
@@ -150,7 +170,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (fg3 == null) {
                     //fg3 = new Release_Fragment();
                    // fragmentTransaction.add(R.id.content, fg3);
-                    startActivity(new Intent(MainActivity.this,Round_Video_.class));
+                   // user=null;
+                    user=new User();
+                    if (user.phone!=null) {
+                        startActivityForResult(new Intent(MainActivity.this, Round_Video_.class),0);
+                    }
+                    else {
+                        startActivityForResult(new Intent(MainActivity.this, Register_.class), 0);
+                        finish();
+                    }
                     //将显示一个ftagment改成跳往一个activity
                 } else {
                     startActivity(new Intent(MainActivity.this,Round_Video_.class));
@@ -237,4 +265,47 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     {
         uplayout.setVisibility(View.INVISIBLE);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode)
+        {
+            case 0:
+                user=new User();
+                if (user.wait_UpLoad!=null)
+                {
+                     UpLoad_Video_AsyncTask upLoad_video_asyncTask=new UpLoad_Video_AsyncTask();
+                    upLoad_video_asyncTask.execute(user.wait_UpLoad);//启动异步线程
+                }
+                break;
+            case 1:
+
+                break;
+        }
+    }
+    //TODO 上传 VVVVVVVVVVVVVVVVV
+    private void upLoad(HashMap<String,Object> map)
+    {
+       // HashMap<String ,Object> map=new HashMap<>();
+        map.put("handler",mHandler);
+      //  map.put("path",file_with.GetFile().getPath());
+      //  map.put("videourl","http://192.168.1.109:3333/video/push/:videoId?token=${token}");
+       // map.put("title","");
+        Post_Http post_http=new Post_Http(map);
+        post_http.loadvideopng();//启动上传三步骤
+
+    }
+     class UpLoad_Video_AsyncTask extends AsyncTask<HashMap<String,Object>,Void,String>
+    {
+        HashMap<String,Object> map;
+
+        @Override
+        protected String doInBackground(HashMap<String, Object>... params) {
+            this.map=params[0];//获得视频数据
+            upLoad(map);
+            return null;
+        }
+    } //TODO 上传 AAAAAAAAAAAAAAAA
+
 }

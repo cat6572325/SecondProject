@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <Button
+            android:layout_height="20dp"
+            android:layout_width="23dp"
+            android:id="@+id/Register_back"
+            android:layout_margin="24dp"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="注册"
+            android:textSize="22sp"
+            android:layout_margin="20dp"/>
+
+        <RelativeLayout
+            android:layout_height="130dp"
+            android:layout_width="264dp"
+            android:layout_centerInParent="true">
+
+            <LinearLayout
+                android:layout_height="130dp"
+                android:layout_width="240dp"
+                android:orientation="vertical"
+              >
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1.0">
+
+                    <ImageView
+                        android:layout_height="35dp"
+                        android:layout_width="20dp"
+                        android:background="@mipmap/ic_launcher"
+                        android:layout_margin="15dp"/>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/Register_TextInput"
+                        >
+                        <EditText
+                            android:layout_height="match_parent"
+                            android:ems="20"
+                            android:id="@+id/phone_key"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:layout_width="match_parent"
+                            android:hint="enter your phone number"
+                            android:maxHeight="60dp"
+                            android:inputType="number|textShortMessage"
+                            android:background="#00000000"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_height="1dp"
+                    android:background="?android:attr/dividerVertical"
+                    android:layout_width="match_parent"/>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1.0">
+
+                    <ImageView
+                        android:layout_height="35dp"
+                        android:layout_width="20dp"
+                        android:background="@mipmap/ic_launcher"
+                        android:layout_margin="15dp"/>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/Register_TextInput1"
+                        >
+                        <EditText
+                            android:layout_height="match_parent"
+                            android:ems="10"
+                            android:id="@+id/pas_key"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:layout_width="match_parent"
+                            android:maxHeight="60dp"
+                            android:inputType="textPassword"
+                            android:hint="enter your password"
+                            android:background="#00000000"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_height="35dp"
+                android:layout_width="35dp"
+                android:id="@+id/Register_Button"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:background="@mipmap/ic_launcher"/>
+
+        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="注册即同意 181s注册条款"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+    </RelativeLayout>
+
+</LinearLayout>

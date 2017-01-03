@@ -33,7 +33,7 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         this.fragment_first=fragment_first;
     }
 
-    public void onBind(final int position, String str, final MyViewHolder myViewHolder, final Second_Adapter second_adapter) {
+    public void onBind(final int position, final String url, final MyViewHolder myViewHolder, final Second_Adapter second_adapter) {
 
         //增加封面
          imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -49,9 +49,9 @@ class MyViewHolder extends RecyclerView.ViewHolder {
                 second_adapter.notifyDataSetChanged();
                 //listVideoUtil.setLoop(true);
                 fragment_first.listVideoUtil.setPlayPositionAndTag(position, TAG);
-                final String url = "http://baobab.wdjcdn.com/14564977406580.mp4";
+               // final String url = url;//"http://baobab.wdjcdn.com/14564977406580.mp4";
                 //listVideoUtil.setCachePath(new File(FileUtils.getPath()));
-                fragment_first.listVideoUtil.startPlay(url);
+                fragment_first.listVideoUtil.startPlay("http://"+url);
             }
         });
     }

@@ -27,10 +27,15 @@ import com.example.zqq.myapplication.Adapters.Second_Adapter;
 import com.example.zqq.myapplication.Llisteners.SampleListener;
 import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.R;
+import com.example.zqq.myapplication.Users.User;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.ListVideoUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,10 +51,33 @@ public class Fragment_First extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            JSONArray jsonArray;
+            JSONObject jsonObject,jsonObject1;
             switch (msg.what) {
                 case 0:
-                    String json=(String)msg.obj;
+                    try {
+                        User user=new User();
+                        String json=(String)msg.obj;
                     Log.e("视频json",json);
+                        jsonArray=new JSONArray(json);
+                        for (int i = 0; i <jsonArray.length() ; i++) {
+                            jsonObject= jsonArray.getJSONObject(i);//获取第i个视频
+                            jsonObject1=jsonObject.getJSONObject("video_url");
+                            HashMap<String,Object> map=new HashMap<>();
+                            map.put("vid_url",jsonObject1.getString("vid_url"));
+                            map.put("title","FirstVideos");
+                            map.put("layout",0);
+                            map.put("tag",String.valueOf(System.currentTimeMillis()));
+                            if (user.all_video==null)
+                                user.all_video=new ArrayList<>();
+                            user.all_video.add(map);
+                        }
+                        AddData(user.all_video);
+
+
+                     } catch (JSONException e) {
+                        Log.e("转换json的时候",e.toString());
+                    }
                     break;
             }
         }
@@ -195,6 +223,7 @@ public class Fragment_First extends Fragment {
             @Override protected void onPostExecute(String[] result) {
                 // Call setRefreshing(false) when the list has been refreshed.
                 mWaveSwipeRefreshLayout.setRefreshing(false);
+                getVideos();
                 super.onPostExecute(result);
             }
         }
@@ -202,7 +231,7 @@ public class Fragment_First extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getVideos();
+
     }
 
     private void getVideos()
@@ -210,7 +239,11 @@ public class Fragment_First extends Fragment {
         HashMap<String,Object> map=new HashMap<>();
         map.put("handler",mHandler);
         MyAsycTask myAsycTask=new MyAsycTask(map);
-        myAsycTask.execute("http://192.168.1.109:3333/video/?per=1&page=1");
+
+     int total=second_adapter.getItemCount()/6;
+        if (total<1)
+            total=1;
+        myAsycTask.execute("http://192.168.1.109:3333/video/?per=1&page="+(total+1));
         //启动线程联网后就返回
     }
     public void AddData(ArrayList<HashMap<String,Object>> Datalist)
@@ -219,15 +252,18 @@ public class Fragment_First extends Fragment {
       //  HashMap<String ,Object> map=new HashMap<>();
        // map.put("title",Datalist.get(0).get("title").toString());
        // lists.add(map);
-        //将视频条目添加到集合类
-        Datalist.get(0).put("VideoList",listVideoUtil);
-        lists.addAll(Datalist);
+        for (int i = 0; i <Datalist.size() ; i++) {
+            //将视频条目添加到集合类
+            Datalist.get(i).put("VideoList",listVideoUtil);
+            lists.addAll(Datalist);
 
-        listVideoUtil = new ListVideoUtil(getContext());
-       // second_adapter.setListVideoUtil(listVideoUtil);
-        listVideoUtil.setFullViewContainer(videoFullContainer);
-        listVideoUtil.setHideStatusBar(true);
-       second_adapter.notifyDataSetChanged();
+            listVideoUtil = new ListVideoUtil(getContext());
+            // second_adapter.setListVideoUtil(listVideoUtil);
+            listVideoUtil.setFullViewContainer(videoFullContainer);
+            listVideoUtil.setHideStatusBar(true);
+
+        }
+        second_adapter.notifyDataSetChanged();
     }
     class MyAsycTask extends AsyncTask<String,Void,String>
     {//TODO 异步
