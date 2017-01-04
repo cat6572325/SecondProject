@@ -1,17 +1,26 @@
 package com.example.zqq.myapplication;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity; // 注意这里我们导入的V4的包，不要导成app的包了
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ActionMenuView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +30,9 @@ import com.example.zqq.myapplication.NetWorks.Post_Http;
 import com.example.zqq.myapplication.Users.User;
 
 import java.util.HashMap;
+
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener{
 
@@ -43,7 +55,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Flop_Fragment_ fg2;
     private Release_Fragment fg3;
     private Home_Fragment fg4;
-    private Home_Fragment fg5;
+    private Mine_Fragment_ fg5;
     // 帧布局对象，用来存放Fragment对象
     private FrameLayout frameLayout;
     // 定义每个选项中的相关控件
@@ -132,6 +144,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      * @param index 选项卡的标号：0, 1, 2, 3
      */
     private void setChioceItem(int index) {
+
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         clearChioce(); // 清空, 重置选项, 隐藏所有Fragment
         hideFragments(fragmentTransaction);
@@ -164,24 +178,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case 2:
 // thirdImage.setImageResource(R.drawable.XXXX);
-                thirdText.setTextColor(0x99ff0000);
+             //   thirdText.setTextColor(0x99ff0000);
               //  thirdLayout.setBackgroundColor(gray);
-                thirdImage.setBackgroundResource(R.mipmap.release_selected);
+               thirdImage.setBackgroundResource(R.mipmap.release_selected);
                 if (fg3 == null) {
-                    //fg3 = new Release_Fragment();
-                   // fragmentTransaction.add(R.id.content, fg3);
+                    fg3 = new Release_Fragment();
+                   fragmentTransaction.add(R.id.content, fg3);
                    // user=null;
                     user=new User();
                     if (user.phone!=null) {
                         startActivityForResult(new Intent(MainActivity.this, Round_Video_.class),0);
                     }
                     else {
-                        startActivityForResult(new Intent(MainActivity.this, Register_.class), 0);
-                        finish();
+                       // startActivityForResult(new Intent(MainActivity.this, Register_.class), 0);
+                        //finish();
+                        registerpop();
                     }
                     //将显示一个ftagment改成跳往一个activity
                 } else {
                     startActivity(new Intent(MainActivity.this,Round_Video_.class));
+
 
                    // fragmentTransaction.show(fg3);
                 }
@@ -205,7 +221,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 //   fourthLayout.setBackgroundColor(gray);
                 mine_img.setBackgroundResource(R.mipmap.mine_selected);
                 if (fg5 == null) {
-                    fg5 = new Home_Fragment();
+                    fg5 = new Mine_Fragment_();
                     fragmentTransaction.add(R.id.content, fg5);
                 } else {
                     fragmentTransaction.show(fg5);
@@ -265,6 +281,79 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     {
         uplayout.setVisibility(View.INVISIBLE);
     }
+    PopupWindow mPopWindow;
+private void registerpop()
+{
+    LayoutInflater inflater = getLayoutInflater();
+   final View layout = inflater.inflate(R.layout.popupwindow_register_,
+     (ViewGroup) findViewById(R.id.dialog));
+    final   EditText editText,editText1;
+    editText=(EditText)layout.findViewById(R.id.phone_register);
+    editText1=(EditText)layout.findViewById(R.id.password_register);
+
+    final AlertDialog.Builder dialog= new AlertDialog.Builder(this).setTitle("注册").setView(layout)
+
+    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+                     HashMap<String,Object> map=new HashMap<>();
+                    map.put("handler",mHandler);
+                    map.put("Context",MainActivity.this);
+                    map.put("what",0);
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("phone", editText.getText().toString())
+                            .add("password",editText1.getText().toString())
+                            .build();
+                 MyAsyncTask myAsycTask=new MyAsyncTask(map,formBody);
+                    myAsycTask.execute("http://192.168.1.109:3333/reg");
+        }
+    })
+    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+        }
+    });
+    Button btn=(Button)layout.findViewById(R.id.changeto);
+    btn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            editText.setHint("输入帐号");
+            editText1.setHint("输入密码");
+            dialog.notifyAll();
+        }
+    });
+
+             dialog.show();
+
+
+}
+    class MyAsyncTask extends AsyncTask<String, Void, String> {//TODO 异步
+        HashMap<String, Object> map;
+        RequestBody formBody;
+
+        public MyAsyncTask(HashMap<String, Object> map, RequestBody formBody) {
+            this.map = map;
+            this.formBody = formBody;
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+
+            Post_Http post_http = new Post_Http(map);
+            post_http.Post_Http(params[0], formBody);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -275,7 +364,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 user=new User();
                 if (user.wait_UpLoad!=null)
                 {
-                     UpLoad_Video_AsyncTask upLoad_video_asyncTask=new UpLoad_Video_AsyncTask();
+                    setChioceItem(0); // 初始化页面加载时显示第一个选项卡
+
+                    UpLoad_Video_AsyncTask upLoad_video_asyncTask=new UpLoad_Video_AsyncTask();
                     upLoad_video_asyncTask.execute(user.wait_UpLoad);//启动异步线程
                 }
                 break;

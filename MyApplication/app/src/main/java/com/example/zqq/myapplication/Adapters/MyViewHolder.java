@@ -20,6 +20,8 @@ class MyViewHolder extends RecyclerView.ViewHolder {
     FrameLayout frameLayout;
     ImageView btn;
     ImageView imageView;
+    TextView plays_t,likes_t,comments_t;
+    TextView nickname;
     ListVideoUtil listVideoUtil;
     RelativeLayout wannaHideOfLayout;
 
@@ -29,6 +31,10 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         frameLayout=(FrameLayout)itemView.findViewById(R.id.list_item_container);
         btn=(ImageView)itemView.findViewById(R.id.list_item_btn);//点击开始播放
         wannaHideOfLayout=(RelativeLayout)itemView.findViewById(R.id.framelayout_above_layout);
+        plays_t=(TextView)itemView.findViewById(R.id.plays_t);
+        likes_t=(TextView)itemView.findViewById(R.id.likes_t);
+        comments_t=(TextView)itemView.findViewById(R.id.comments_t);
+        nickname=(TextView) itemView.findViewById(R.id.nickname);
         imageView=new ImageView(context);
         this.fragment_first=fragment_first;
     }
@@ -55,6 +61,8 @@ class MyViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
+
+
 
     public void setListVideoUtil(ListVideoUtil listVideoUtil) {
         this.listVideoUtil=listVideoUtil;

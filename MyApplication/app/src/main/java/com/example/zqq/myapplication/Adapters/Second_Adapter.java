@@ -108,7 +108,9 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
         switch ((int) lists.get(position).get("layout")) {
 
             case 0:
-                //  holder.infoDetails_paidcount_tv.setText(lists.get(position).get("data").toString());
+                 holder.nickname.setText(lists.get(position).get("nickname").toString());
+                holder.plays_t.setText(lists.get(position).get("view_number").toString());
+                holder.likes_t.setText(lists.get(position).get("like_number").toString());
                 //    holder.infoDetails_title_tv.setText(lists.get(position).get("name").toString());
                 //    holder.infoDetails_relativelayout.setTag(lists.get(position).get("vdoPhotourl").toString());
                 //设置内容背景图

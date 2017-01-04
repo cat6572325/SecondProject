@@ -156,6 +156,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_above="@id/lis"
+        android:layout_alignParentTop="true"
         android:background="@android:color/white"/>
     <!--3. 底部的四个选项菜单-->
         <LinearLayout

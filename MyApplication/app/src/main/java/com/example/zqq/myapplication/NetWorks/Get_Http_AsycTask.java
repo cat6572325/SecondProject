@@ -112,6 +112,13 @@ public class Get_Http_AsycTask  {
             public void onFailure(okhttp3.Call c,IOException e)
 
             {
+                handler=(Handler)map.get("handler");
+                msg=new Message();
+
+                msg.what=1;
+                handler.sendMessage(msg);
+
+
                 Log.e("错误",e.toString());
             }
 

@@ -1,6 +1,7 @@
 package com.example.zqq.myapplication.classify_Fragments;
 
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,12 +19,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ActionMenuView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zqq.myapplication.Adapters.Second_Adapter;
+import com.example.zqq.myapplication.Home_Fragment;
 import com.example.zqq.myapplication.Llisteners.SampleListener;
 import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.R;
@@ -52,9 +57,38 @@ public class Fragment_First extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             JSONArray jsonArray;
-            JSONObject jsonObject,jsonObject1;
+            JSONObject jsonObject,jsonObject1,jsonObject2,jsonObject3,jsonObject4;
             switch (msg.what) {
                 case 0:
+                    // [{"_id":"5865dca652823516a2390753"
+                    // ,"poster":{
+                    // "_id":"58667a34569c4e1e6b185227"
+                    // ,"nickname":"暂无昵称"
+                    // ,"thumbnail":null
+                    // ,"head_pic":null
+                    // ,"follows":[]
+                    // ,"pub_videos":[]
+                    // }
+                    // ,"title":"444"
+                    // ,"video_url":{
+                    // "_id":"5865dd0952823516a2390754"
+                    // ,"vid_url":"192.168.1.109:3333/public/videos/1482807253367.mp4"
+                    // }
+                    // ,"cover":{
+                    // "_id":"5865dc2f52823516a2390752"
+                    // ,"cover_url":"192.168.1.109:3333/public/covers/004.png"
+                    // }
+                    // ,"channel":"逗比"
+                    // ,"view_number":10
+                    // ,"like_number":1
+                    // ,"comment_number":13
+                    // ,"__v":0
+                    // ,"create_time":"2016-12-30T04:03:50.628Z"
+                    // ,"comments":[]
+                    // }]
+                    /*
+                    视频json: [{"_id":"5865de9952823516a2390756","poster":null,"title":"555","video_url":{"_id":"5865deb752823516a2390757","vid_url":"192.168.1.109:3333/public/videos/1482807248048.mp4"},"cover":{"_id":"5865de7952823516a2390755","cover_url":"192.168.1.109:3333/public/covers/testphoto.jpg"},"channel":"热门","view_number":5,"like_number":1,"comment_number":0,"__v":0,"create_time":"2016-12-30T04:12:09.495Z","comments":[]}]
+                     */
                     try {
                         User user=new User();
                         String json=(String)msg.obj;
@@ -63,10 +97,18 @@ public class Fragment_First extends Fragment {
                         for (int i = 0; i <jsonArray.length() ; i++) {
                             jsonObject= jsonArray.getJSONObject(i);//获取第i个视频
                             jsonObject1=jsonObject.getJSONObject("video_url");
+                         //   jsonObject2=jsonObject.getJSONObject("poster");
+                            jsonObject3=jsonObject.getJSONObject("cover");
+
+
                             HashMap<String,Object> map=new HashMap<>();
                             map.put("vid_url",jsonObject1.getString("vid_url"));
                             map.put("title","FirstVideos");
                             map.put("layout",0);
+                            map.put("nickname",jsonObject.getString("title"));
+                            map.put("comment_number",jsonObject.getString("comment_number"));
+                            map.put("like_number",jsonObject.getString("like_number"));
+                            map.put("view_number",jsonObject.getString("view_number"));
                             map.put("tag",String.valueOf(System.currentTimeMillis()));
                             if (user.all_video==null)
                                 user.all_video=new ArrayList<>();
@@ -79,9 +121,24 @@ public class Fragment_First extends Fragment {
                         Log.e("转换json的时候",e.toString());
                     }
                     break;
+                case 1:
+                    //临时
+                    HashMap<String,Object> map=new HashMap<>();
+                    map.put("vid_url","baobab.wdjcdn.com/14564977406580.mp4");
+                    map.put("title","FirstVideos");
+                    map.put("layout",0);
+                    map.put("tag",String.valueOf(System.currentTimeMillis()));
+                 ArrayList<HashMap<String,Object>> maps=new ArrayList<>();
+                    maps.add(map);
+
+            AddData(maps);
+
+            break;
             }
         }
     };
+    PopupWindow mPopWindow;
+
     int lastVisibleItem;
     int firstVisibleItem;
     LinearLayoutManager linearLayoutManager;

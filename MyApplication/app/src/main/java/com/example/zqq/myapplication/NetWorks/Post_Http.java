@@ -6,6 +6,7 @@ import android.media.*;
 import android.os.*;
 import android.provider.*;
 import android.util.*;
+import android.widget.Toast;
 
 import com.example.zqq.myapplication.Users.User;
 import com.socks.okhttp.plus.*;
@@ -156,13 +157,8 @@ HashMap<String,Object> map;
                     .post(formBody)
                     .build();
             Log.e("url",url);
-            try
-            {
-                response = client.newCall(request).execute();
-            }
-            catch (IOException e)
-            {}
-            //if (!response.isSuccessful())
+               response = client.newCall(request).execute();
+           //if (!response.isSuccessful())
             str = response.body().string();
             Log.e("发送视频信息时返回了",str);
             jsonObject=new JSONObject(str);
@@ -278,15 +274,10 @@ HashMap<String,Object> map;
                     .post(formBody)
                     .build();
             Log.e("url",url);
-            try
-            {
+
+
                 response = client.newCall(request).execute();
-            }
-            catch (IOException e)
-            {
-                Log.e("注册时",e.toString());
-            }
-            //if (!response.isSuccessful())
+              //if (!response.isSuccessful())
             str = response.body().string();
             Log.e("post",str);
             jsonObject=new JSONObject(str);
@@ -298,10 +289,14 @@ HashMap<String,Object> map;
 
 
 
-        } catch (IOException e) {
+
+
+    } catch (IOException e) {
             e.printStackTrace();
             Log.e("post",e.toString());
-
+            Looper.prepare();
+            Toast.makeText((Context)map.get("context"),e.toString(),Toast.LENGTH_LONG).show();
+            Looper.loop();
 
         } catch(JSONException e)
         {

@@ -72,6 +72,7 @@ public class Register_ extends AppCompatActivity {
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("handler", mHandler);
                     map.put("what", 1);
+                    map.put("context",Register_.this);
                     map.put("Context", Register_.this);
                     RequestBody formBody = new FormBody.Builder()
                             .add("phone", phon.getText().toString())
