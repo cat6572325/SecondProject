@@ -42,6 +42,8 @@ HashMap<String,Object> map;
     {
         final Message msg=new Message();
         final Bundle bundle=new Bundle();
+        handler=(Handler)map.get("handler");
+       final Context context=(Context)map.get("context");
         User user=new User();
         final File file = new File(map.get("path").toString());//Environment.getExternalStorageDirectory(), "jiandan02.jpg");
         if (!file.exists()) {
@@ -72,10 +74,15 @@ HashMap<String,Object> map;
                             JSONObject js=new JSONObject(str);
                             Log.e("video",str);
                             Log.e("完成", String.valueOf(response.isSuccessful()));
-
+                            handler.sendEmptyMessage(2);
                         }catch(JSONException e)
                         {
+                            Log.e("完成错误", e.toString());
 
+                        }finally {
+                            Looper.prepare();
+                            Toast.makeText(context,"完成",Toast.LENGTH_SHORT).show();
+                            Looper.loop();
                         }
                     }
 
@@ -264,8 +271,11 @@ HashMap<String,Object> map;
         OkHttpClient client=new OkHttpClient();
         JSONObject jsonObject = null;
         JSONArray jsonArray = null;
+        final Context context=(Context)map.get("context");
+
         String str = null;
         handler=(Handler)map.get("handler");
+
         Response response = null;
         try {
 
@@ -303,8 +313,9 @@ HashMap<String,Object> map;
             Log.e("post",e.toString());
         }
         finally {
-
-
+            Looper.prepare();
+            Toast.makeText(context,"完成",Toast.LENGTH_SHORT).show();
+            Looper.loop();
         }
 
     }

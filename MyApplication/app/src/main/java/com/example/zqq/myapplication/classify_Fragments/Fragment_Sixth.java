@@ -51,7 +51,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 /**
  * Created by zqq on 16-12-27.
  */
-public class Fragment_First extends Fragment {
+public class Fragment_Sixth extends Fragment {
     public Handler mHandler=new Handler()
     {
         @Override
@@ -93,7 +93,7 @@ public class Fragment_First extends Fragment {
                     try {
                         User user=new User();
                         String json=(String)msg.obj;
-                    Log.e("视频json",json);
+                        Log.e("视频json",json);
                         jsonArray=new JSONArray(json);
                         for (int i = 0; i <jsonArray.length() ; i++) {
                             Log.e("jsonArrayLength",":"+jsonArray.length());
@@ -122,7 +122,7 @@ public class Fragment_First extends Fragment {
                             }
                         }
                         AddData(user.all_video);
-                     } catch (JSONException e) {
+                    } catch (JSONException e) {
                         Log.e("转换json的时候",e.toString());
                         //获取失败的时候
                         if (countItems==0)
@@ -149,12 +149,12 @@ public class Fragment_First extends Fragment {
                     map.put("like_number","null");
                     map.put("nickname","null");
                     map.put("tag",String.valueOf(System.currentTimeMillis()));
-                 ArrayList<HashMap<String,Object>> maps=new ArrayList<>();
+                    ArrayList<HashMap<String,Object>> maps=new ArrayList<>();
                     maps.add(map);
 
-            AddData(maps);
+                    AddData(maps);
 
-            break;
+                    break;
             }
         }
     };
@@ -173,7 +173,7 @@ public class Fragment_First extends Fragment {
     public ListVideoUtil listVideoUtil;
     Get_Http_AsycTask get_http_asycTask;
     FrameLayout videoFullContainer;
-     @Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -182,21 +182,21 @@ public class Fragment_First extends Fragment {
              getActivity().  getWindow().setExitTransition(new Explode());
          }*/
 
-         v = inflater.inflate(R.layout.home_fragments_layout, container, false);
-       //   Bundle bundle = getArguments();
+        v = inflater.inflate(R.layout.home_fragments_layout, container, false);
+        //   Bundle bundle = getArguments();
         // String agrs1 = bundle.getString("agrs1");
 
         //  tv.setText(agrs1);
-        initView(v);
+    //    initView(v);
         return v;
     }
 
 
 
     private void initView(View view) {
-         videoFullContainer=(FrameLayout) view.findViewById(R.id.video_full_container);
+        videoFullContainer=(FrameLayout) view.findViewById(R.id.video_full_container);
         // 设置一个exit transition
-         listVideoUtil = new ListVideoUtil(getContext());
+        listVideoUtil = new ListVideoUtil(getContext());
         listVideoUtil.setFullViewContainer(videoFullContainer);
 
 
@@ -209,7 +209,7 @@ public class Fragment_First extends Fragment {
         mWaveSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.RED);
         //mWaveSwipeRefreshLayout.setWaveColor(Color.argb(100,255,0,0));
         mWaveSwipeRefreshLayout.setWaveColor(0xffff0000);
-        second_adapter = new Second_Adapter(getActivity(), lists,this,listVideoUtil);
+      //  second_adapter = new Second_Adapter(getActivity(), lists,this,listVideoUtil);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
 
         home_rec.setLayoutManager(gridLayoutManager);
@@ -298,18 +298,18 @@ public class Fragment_First extends Fragment {
         });
 
     }
-        private class Task extends AsyncTask<Void, Void, String[]> {
-               @Override
-            protected String[] doInBackground(Void... params) {
-                return new String[0];
-            }
-
-            @Override protected void onPostExecute(String[] result) {
-                // Call setRefreshing(false) when the list has been refreshed.
-                   getVideos();
-                super.onPostExecute(result);
-            }
+    private class Task extends AsyncTask<Void, Void, String[]> {
+        @Override
+        protected String[] doInBackground(Void... params) {
+            return new String[0];
         }
+
+        @Override protected void onPostExecute(String[] result) {
+            // Call setRefreshing(false) when the list has been refreshed.
+            getVideos();
+            super.onPostExecute(result);
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -327,7 +327,7 @@ public class Fragment_First extends Fragment {
         map.put("handler",mHandler);
         MyAsycTask myAsycTask=new MyAsycTask(map);
 
-     int total=second_adapter.getItemCount()/5;
+        int total=second_adapter.getItemCount()/5;
         //通过总数处以6来获得应该从哪一页开始获取视频
         Log.e("获取第",""+total+"页,"+countItems+"个视频");
         myAsycTask.execute("http://192.168.1.109:3333/video/?per="+countItems+"&page="+(total+1));
@@ -336,9 +336,9 @@ public class Fragment_First extends Fragment {
     public void AddData(ArrayList<HashMap<String,Object>> Datalist)
     {
 
-      //  HashMap<String ,Object> map=new HashMap<>();
-       // map.put("title",Datalist.get(0).get("title").toString());
-       // lists.add(map);
+        //  HashMap<String ,Object> map=new HashMap<>();
+        // map.put("title",Datalist.get(0).get("title").toString());
+        // lists.add(map);
         for (int i = 0; i <Datalist.size() ; i++) {
             Log.e("DatalistSize",":"+Datalist.size());
             //将视频条目添加到集合类
@@ -356,10 +356,10 @@ public class Fragment_First extends Fragment {
     }
     class MyAsycTask extends AsyncTask<String,Void,String>
     {//TODO 异步
-         HashMap<String,Object> map;
+        HashMap<String,Object> map;
         public MyAsycTask(HashMap<String,Object> map)
-            {
-                this.map=map;
+        {
+            this.map=map;
 
         }
 

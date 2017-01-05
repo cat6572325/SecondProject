@@ -103,7 +103,7 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
         ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();//得到item的LayoutParams布局参数
 
         holder.itemView.setLayoutParams(params);//把params设置给item布局
-        final int count = position;
+
         //通过返回的viewtype获得硬性布局
         switch ((int) lists.get(position).get("layout")) {
 
@@ -115,7 +115,7 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
                 //    holder.infoDetails_relativelayout.setTag(lists.get(position).get("vdoPhotourl").toString());
                 //设置内容背景图
                 holder.setListVideoUtil(listVideoUtil);
-                holder.onBind(position, lists.get(position).get("vid_url").toString(), holder, this);
+                holder.onBind(position, lists.get(position)/*.get("vid_url").toString()*/, holder, this);
                 if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -144,6 +144,7 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public int getItemCount() {
+        Log.e("listsSize",":"+lists.size());
         return lists.size();
     }
 

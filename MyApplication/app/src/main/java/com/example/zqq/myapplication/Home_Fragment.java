@@ -2,32 +2,33 @@ package com.example.zqq.myapplication;
 /*
  *
  */
-import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ActionMenuView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zqq.myapplication.Adapters.FragmentAdapter;
+import com.example.zqq.myapplication.Adapters.Mine_Recycler_Adapter;
 import com.example.zqq.myapplication.Adapters.Second_Adapter;
+import com.example.zqq.myapplication.Utils.RecyclerView_Space;
+import com.example.zqq.myapplication.classify_Fragments.Fragment_Fifth;
 import com.example.zqq.myapplication.classify_Fragments.Fragment_First;
+import com.example.zqq.myapplication.classify_Fragments.Fragment_Fourth;
 import com.example.zqq.myapplication.classify_Fragments.Fragment_Second;
+import com.example.zqq.myapplication.classify_Fragments.Fragment_Seventh;
+import com.example.zqq.myapplication.classify_Fragments.Fragment_Sixth;
 import com.example.zqq.myapplication.classify_Fragments.Fragment_third;
 
 import java.util.ArrayList;
@@ -38,22 +39,19 @@ public class Home_Fragment extends Fragment implements View.OnClickListener{
     Fragment_First fragment_first=new Fragment_First();
     Fragment_Second fragment_second=new Fragment_Second();
     Fragment_third fragment_third=new Fragment_third();
-RecyclerView home_rec;
+    Fragment_Fourth fragment_fourth=new Fragment_Fourth();
+    Fragment_Fifth fragment_fifth=new Fragment_Fifth();
+    Fragment_Sixth fragment_sixth=new Fragment_Sixth();
+    Fragment_Seventh fragment_seventh=new Fragment_Seventh();
     TabLayout mTabLayout;
     ViewPager mViewPager;
     RelativeLayout btn;
+    RecyclerView popupwindow_recyclerView;
+    Mine_Recycler_Adapter mAdapter=null;
+    ArrayList<HashMap<String,Object>> maps=new ArrayList<>(),popwindow_recyclers=new ArrayList<>();
     View v;
     PopupWindow mPopWindow;
     Button btntest;
-    public ArrayList<HashMap<String, Object>> lists = new ArrayList<HashMap<String, Object>>(), lists2 = new ArrayList<HashMap<String, Object>>();
-private Second_Adapter second_adapter;
-    public static Home_Fragment newInstance(String param1) {
-        Home_Fragment fragment = new Home_Fragment();
-        Bundle args = new Bundle();
-        args.putString("agrs1", param1);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public Home_Fragment() {
 
@@ -83,19 +81,31 @@ private void initView(View view)
     //初始化TabLayout的title数据集
     List<String> titles = new ArrayList<>();
     titles.add("推荐");
-    titles.add("最热");
-    titles.add("最新");
+    titles.add("最爱");
+    titles.add("最好");
+    titles.add("作死");
+    titles.add("动物");
+    titles.add("昆虫");
+    titles.add("运动");
 
     //初始化TabLayout的title
     mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(0)));
     mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(1)));
     mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(2)));
+    mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(3)));
+    mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(4)));
+    mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(5)));
+    mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(6)));
     //初始化ViewPager的数据集
     List<Fragment> fragments = new ArrayList<>();
 
     fragments.add(fragment_first);
     fragments.add(fragment_second);
     fragments.add(fragment_third);
+    fragments.add(fragment_fourth);
+    fragments.add(fragment_fifth);
+    fragments.add(fragment_sixth);
+    fragments.add(fragment_seventh);
 
     //创建ViewPager的adapter
     FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments, titles);
@@ -124,7 +134,10 @@ private void initView(View view)
         }
     });
 }
+
+
     public void showPopupWindow(final View v) {
+        //TODO 下拉选项表格
         //设置contentView
         View contentView = LayoutInflater.from(getContext())
                 .inflate(R.layout.classify_popwindow_layout, null);
@@ -133,16 +146,43 @@ private void initView(View view)
                 , ActionMenuView.LayoutParams.WRAP_CONTENT//设置高度，同上
                 , true);//不知道
         mPopWindow.setContentView(contentView);
-        //设置各个控件的点击响应
-        //  btntest=(Button)contentView.findViewById(R.id.testutton);
-        //   btntest.setOnClickListener(this);
-        //  TextView tv1 = (TextView)contentView.findViewById(R.id.pop_computer);
-        //  TextView tv2 = (TextView)contentView.findViewById(R.id.pop_financial);
-        //  TextView tv3 = (TextView)contentView.findViewById(R.id.pop_manage);
-        //  tv1.setOnClickListener(this);
-        //  tv2.setOnClickListener(this);
-        // tv3.setOnClickListener(this);
-        //显示PopupWindow
+        popupwindow_recyclerView=(RecyclerView)contentView.findViewById(R.id.popupwind_recyclerView);
+        //通过布局获取recyclerview实例
+        mAdapter = new Mine_Recycler_Adapter(popwindow_recyclers);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 5);
+        //设置布局为一行5列的样式
+        popupwindow_recyclerView.setLayoutManager(gridLayoutManager);
+        int spanCount = 5; // 3 columns
+        int spacing = 50; // 50px
+        boolean includeEdge = false;
+        popupwindow_recyclerView.addItemDecoration(new RecyclerView_Space(spanCount, spacing, includeEdge));
+
+        for (int i = 0; i <20 ; i++) {
+            HashMap<String,Object> map=new HashMap<>();
+            map.put("title","第"+i+"个");
+            map.put("layout",1);
+            map.put("context",getContext());
+            popwindow_recyclers.add(map);
+        }
+
+
+        //绑定布局管理器
+        popupwindow_recyclerView.setAdapter(mAdapter);
+        //条目点击事件
+        mAdapter.setOnClickListener(new Mine_Recycler_Adapter.OnItemClickListener() {
+            @Override
+            public void onItemClickListener(View view, int position) {
+                Toast.makeText(getActivity(), position + "========Click:", Toast.LENGTH_SHORT).show();
+                fragment_first.deleteItem(position);//删除一个item
+            }
+
+            @Override
+            public void onItemLongClickListener(View view, int position) {
+
+            }
+        });
+
+         //显示PopupWindow
         View rootview = LayoutInflater.from(getContext()).inflate(R.layout.home_pager, null);
         //  mPopWindow.showAtLocation(rootview, Gravity.VERTICAL_GRAVITY_MASK, 0, 0);//设置相对于布局的哪里显示
         // mPopWindow.setAnimationStyle(R.style.AnimationPreview);

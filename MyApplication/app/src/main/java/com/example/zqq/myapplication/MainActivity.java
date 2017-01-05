@@ -1,4 +1,5 @@
 package com.example.zqq.myapplication;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,6 +30,9 @@ import com.example.zqq.myapplication.NetWorks.Flop_Fragment_;
 import com.example.zqq.myapplication.NetWorks.Post_Http;
 import com.example.zqq.myapplication.Users.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 import okhttp3.FormBody;
@@ -41,12 +45,38 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Bundle bundle = msg.getData();
             switch (msg.what) {
                 case 0:
+                    //注册
+                  //  Button btn=progressDialog.getButton(0);
+                   // btn.setText("成功");
+                   // progressDialog.cancel();
+                    progressDialog.cancel();
 
+                    break;
+                case 1:
+                    //登录
+                    try {
+                        user = new User();
+                        JSONObject JS = (JSONObject) msg.obj;
+                        user.settoken(JS.getString("token"));
+                      //  Button btn1=progressDialog.getButton(0);
+                        //btn1.setText("成功");
+
+                        progressDialog.cancel();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 2:
+                    //上传成功
+
+                    uplayout.setVisibility(View.INVISIBLE);
                     break;
             }
         }
     };
+
                     User user;
+   AlertDialog.Builder dialog=null;
     // 初始化顶部栏显示
     private ImageView titleLeftImv;
     private TextView titleTv;
@@ -78,6 +108,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private int dark = 0xff000000;
     // 定义FragmentManager对象管理器
     private FragmentManager fragmentManager;
+    Button login;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,12 +117,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fragmentManager = getSupportFragmentManager();
         initView(); // 初始化界面控件
         setChioceItem(0); // 初始化页面加载时显示第一个选项卡
+
     }
     /**
      * 初始化页面
      */
     private void initView() {
-
 // 初始化底部导航栏的控件
         firstImage = (ImageView) findViewById(R.id.first_image);
         secondImage = (ImageView) findViewById(R.id.second_image);
@@ -181,10 +213,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
              //   thirdText.setTextColor(0x99ff0000);
               //  thirdLayout.setBackgroundColor(gray);
                thirdImage.setBackgroundResource(R.mipmap.release_selected);
-                if (fg3 == null) {
-                    fg3 = new Release_Fragment();
-                   fragmentTransaction.add(R.id.content, fg3);
-                   // user=null;
                     user=new User();
                     if (user.phone!=null) {
                         startActivityForResult(new Intent(MainActivity.this, Round_Video_.class),0);
@@ -194,13 +222,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         //finish();
                         registerpop();
                     }
-                    //将显示一个ftagment改成跳往一个activity
-                } else {
-                    startActivity(new Intent(MainActivity.this,Round_Video_.class));
-
-
-                   // fragmentTransaction.show(fg3);
-                }
                 break;
             case 3:
 // fourthImage.setImageResource(R.drawable.XXXX);
@@ -282,6 +303,43 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         uplayout.setVisibility(View.INVISIBLE);
     }
     PopupWindow mPopWindow;
+    public void showADialog()
+    {
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setIcon(android.R.mipmap.sym_def_app_icon);
+        progressDialog.setTitle("正在处理数据。。。");
+        progressDialog.setMessage("请稍后。。");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);//设置进度条对话框//样式（水平，旋转）
+
+        //进度最大值
+        progressDialog.setMax(100);
+        progressDialog.setButton("暂停",new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //删除消息队列
+                mHandler.removeMessages(0);
+
+            }
+        });
+
+        progressDialog.setButton2("取消",new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //删除消息队列
+                mHandler.removeMessages(0);
+                //恢复进度条初始值
+
+            }
+        });
+
+        //显示
+        progressDialog.show();
+        //必须设置到show之后
+
+
+    }
 private void registerpop()
 {
     LayoutInflater inflater = getLayoutInflater();
@@ -291,36 +349,53 @@ private void registerpop()
     editText=(EditText)layout.findViewById(R.id.phone_register);
     editText1=(EditText)layout.findViewById(R.id.password_register);
 
-    final AlertDialog.Builder dialog= new AlertDialog.Builder(this).setTitle("注册").setView(layout)
+    dialog= new AlertDialog.Builder(this).setTitle("注册").setView(layout)
 
     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-                     HashMap<String,Object> map=new HashMap<>();
-                    map.put("handler",mHandler);
-                    map.put("Context",MainActivity.this);
-                    map.put("what",0);
-                    RequestBody formBody = new FormBody.Builder()
-                            .add("phone", editText.getText().toString())
-                            .add("password",editText1.getText().toString())
-                            .build();
-                 MyAsyncTask myAsycTask=new MyAsyncTask(map,formBody);
+
+            if (editText.getText().toString()==null & editText1.getText().toString()==null)
+            {
+                Toast.makeText(MainActivity.this,"缺少注册或登录元素",Toast.LENGTH_SHORT).show();
+            }else {
+                showADialog();
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("handler", mHandler);
+                map.put("context", MainActivity.this);
+                RequestBody formBody = new FormBody.Builder()
+                        .add("phone", editText.getText().toString())
+                        .add("password", editText1.getText().toString())
+                        .build();
+                if (editText.getHint().equals("输入帐号")) {
+                    map.put("what", 1);
+                    MyAsyncTask myAsycTask = new MyAsyncTask(map, formBody);
+                    login.setText("请稍等..");
+                    myAsycTask.execute("http://192.168.1.109:3333/login");
+                } else {
+                    map.put("what", 0);
+                    login.setText("请稍等..");
+                    MyAsyncTask myAsycTask = new MyAsyncTask(map, formBody);
+
                     myAsycTask.execute("http://192.168.1.109:3333/reg");
+                }
+            }
         }
-    })
-    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
         }
     });
-    Button btn=(Button)layout.findViewById(R.id.changeto);
-    btn.setOnClickListener(new View.OnClickListener() {
+    login=(Button)layout.findViewById(R.id.changeto);
+    login.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            editText.setHint("输入帐号");
+
+              editText.setHint("输入帐号");
             editText1.setHint("输入密码");
-            dialog.notifyAll();
+            dialog.setTitle("登录");
+
         }
     });
 
@@ -364,8 +439,8 @@ private void registerpop()
                 user=new User();
                 if (user.wait_UpLoad!=null)
                 {
+                    uplayout.setVisibility(View.VISIBLE);//显示正在上传中
                     setChioceItem(0); // 初始化页面加载时显示第一个选项卡
-
                     UpLoad_Video_AsyncTask upLoad_video_asyncTask=new UpLoad_Video_AsyncTask();
                     upLoad_video_asyncTask.execute(user.wait_UpLoad);//启动异步线程
                 }
@@ -380,6 +455,7 @@ private void registerpop()
     {
        // HashMap<String ,Object> map=new HashMap<>();
         map.put("handler",mHandler);
+        map.put("context",MainActivity.this);
       //  map.put("path",file_with.GetFile().getPath());
       //  map.put("videourl","http://192.168.1.109:3333/video/push/:videoId?token=${token}");
        // map.put("title","");
@@ -390,6 +466,7 @@ private void registerpop()
      class UpLoad_Video_AsyncTask extends AsyncTask<HashMap<String,Object>,Void,String>
     {
         HashMap<String,Object> map;
+
 
         @Override
         protected String doInBackground(HashMap<String, Object>... params) {

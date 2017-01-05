@@ -10,8 +10,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zqq.myapplication.R;
+import com.example.zqq.myapplication.Users.User;
 import com.example.zqq.myapplication.classify_Fragments.Fragment_First;
 import com.shuyu.gsyvideoplayer.utils.ListVideoUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -39,7 +43,7 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         this.fragment_first=fragment_first;
     }
 
-    public void onBind(final int position, final String url, final MyViewHolder myViewHolder, final Second_Adapter second_adapter) {
+    public void onBind(final int position, final HashMap<String,Object> map, final MyViewHolder myViewHolder, final Second_Adapter second_adapter) {
 
         //增加封面
          imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -52,12 +56,17 @@ class MyViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 wannaHideOfLayout.setVisibility(View.INVISIBLE);
                 //   getRecyclerBaseAdapter().notifyDataSetChanged();
+
                 second_adapter.notifyDataSetChanged();
                 //listVideoUtil.setLoop(true);
                 fragment_first.listVideoUtil.setPlayPositionAndTag(position, TAG);
                // final String url = url;//"http://baobab.wdjcdn.com/14564977406580.mp4";
                 //listVideoUtil.setCachePath(new File(FileUtils.getPath()));
-                fragment_first.listVideoUtil.startPlay("http://"+url);
+                fragment_first.listVideoUtil.startPlay("http://"+map.get("vid_url").toString());
+                User user=new User();
+                if(user.historys==null)
+                    user.historys=new ArrayList<HashMap<String, Object>>();
+                user.historys.add(map);//播放历史
             }
         });
     }

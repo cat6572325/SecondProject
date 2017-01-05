@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <RelativeLayout
+    android:layout_height="match_parent">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="290dp"
+        android:backgroundTint="#fafafb"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true"
+            app:contentScrim="#fafafb"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp">
+
+
+        <RelativeLayout
 
         android:layout_width="match_parent"
         android:layout_height="240dp"
@@ -29,7 +48,8 @@
             android:text="登陆"
             android:textColor="@android:color/white" />
     </RelativeLayout>
-
+        </android.support.design.widget.CollapsingToolbarLayout>
+</android.support.design.widget.AppBarLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
@@ -147,5 +167,4 @@
         >
 
     </android.support.v7.widget.RecyclerView>
-</LinearLayout>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

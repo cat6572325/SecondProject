@@ -24,7 +24,7 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
     private OnItemClickListener mListener;
     Context context;
     ArrayList<HashMap<String,Object>>  maps;
-    int[] layout = {R.layout.mine_recyclerview_item_layout};
+    int[] layout = {R.layout.mine_recyclerview_item_layout,R.layout.pop_recycler_item_layout,R.layout.history_recyclerview_item_layout,R.layout.nothing_item_layout};
     public Mine_Recycler_Adapter(ArrayList<HashMap<String,Object>> maps)
     {
         this.maps=maps;
@@ -56,28 +56,67 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
 
         holder.itemView.setLayoutParams(params);//把params设置给item布局
 
-        holder.title.setText(maps.get(position).get("title").toString());
-        holder.item_icon.setBackgroundResource((int)maps.get(position).get("icon_id"));
+        switch (getItemViewType(position))
+        {
 
-        if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
-                    mListener.onItemClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
+            case 0:
+                //TODO 我的信息面板
+                holder.title.setText(maps.get(position).get("title").toString());
+                holder.item_icon.setBackgroundResource((int)maps.get(position).get("icon_id"));
+
+                if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
+                            mListener.onItemClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
+                        }
+
+
+                    });
+                    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
+                            mListener.onItemLongClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
+                            return true;
+                        }
+                    });
                 }
+                break;
+            case 1:
+                //TODO 下拉选项表格
+                holder.popwindow_recycler_item_b.setText(maps.get(position).get("title").toString());
+                if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
+                            mListener.onItemClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
+                        }
 
 
-            });
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
-                    mListener.onItemLongClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
-                    return true;
+                    });
+                    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
+                            mListener.onItemLongClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
+                            return true;
+                        }
+                    });
                 }
-            });
+                break;
+            case 2:
+                //历史列表
+
+                break;
+            case 3:
+                //无内容item
+
+                break;
         }
+
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.zqq.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -88,6 +89,7 @@ public class Mine_Fragment_ extends Fragment {
                         break;
                     case 2:
                         //播放历史
+                        startActivity(new Intent(getActivity(),History_.class));
                         break;
                     case 3:
                         //兴趣选择

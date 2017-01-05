@@ -338,11 +338,11 @@ public class Round_Video_ extends FragmentActivity
             } else {
                 camera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
             }
-            camera.setPreviewDisplay(mSurfaceView.getHolder());
+          //  camera.setPreviewDisplay(mSurfaceView.getHolder());
 
             camera.setDisplayOrientation(90);
 
-            camera.setPreviewDisplay(mSurfaceView.getHolder());
+           // camera.setPreviewDisplay(mSurfaceView.getHolder());
             updateCameraParameters();
             camera.unlock();
            // camera.startPreview();
@@ -370,7 +370,7 @@ public class Round_Video_ extends FragmentActivity
             //设置高质量录制,改变码率
             mediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024);
             //设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错
-            mediaRecorder.setVideoSize(1080, 720);
+            mediaRecorder.setVideoSize(176, 144);
             // 设置录制的视频帧率。必须放在设置编码和格式的后面，否则报错
             mediaRecorder.setVideoFrameRate(20);
             // 设置视频文件输出的路径
@@ -466,7 +466,7 @@ public class Round_Video_ extends FragmentActivity
             Log.e("初始化摄像头时",e.toString());
         }
     }
-    private void updateCameraParameters() {
+    private void                                                                                                                                                                                                                                                                                                                                                                                                                                                                     updateCameraParameters() {
         if (camera != null) {
             Camera.Parameters p = camera.getParameters();
 
