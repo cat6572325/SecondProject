@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +38,7 @@ public class Get_Http_AsycTask  {
     Handler handler;
     Message msg=null;
     Bundle bundle=null;
+    Context context;
     public Get_Http_AsycTask()
     {//TODO 构造
 
@@ -51,6 +54,9 @@ public class Get_Http_AsycTask  {
                // .addFormDataPart("photofile", file.getName(), RequestBody.create(MediaType.parse("image/*"), file))
                 //.addPart(Headers.of("photofile", "form-data; name=\"another\";filename=\"another.dex\""), RequestBody.create(MediaType.parse("application/octet-stream"), file))
        //         .build();
+
+        context =(Context)map.get("context");
+        handler=(Handler)map.get("handler");
 
         //进行包装，使其支持进度回调
          final Request request = new Request
@@ -70,10 +76,9 @@ public class Get_Http_AsycTask  {
             {
                 try {
                     final String str=r2.body().string();
-                    handler=(Handler)map.get("handler");
-                    msg=new Message();
+                   msg=new Message();
                     msg.obj=str;
-                    msg.what=0;
+                    msg.what=(Integer)map.get("what");
                     handler.sendMessage(msg);
 
                     Log.e("gethttp",str);
@@ -120,6 +125,7 @@ public class Get_Http_AsycTask  {
 
 
                 Log.e("错误",e.toString());
+
             }
 
         });

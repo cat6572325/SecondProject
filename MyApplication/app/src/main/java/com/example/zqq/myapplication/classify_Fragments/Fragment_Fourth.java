@@ -232,7 +232,7 @@ public class Fragment_Fourth extends Fragment {
             @Override
             public void onRefresh() {
 
-                new Task().execute();
+             //   new Task().execute();
 
             }
         });

@@ -62,7 +62,7 @@ class MyViewHolder extends RecyclerView.ViewHolder {
                 fragment_first.listVideoUtil.setPlayPositionAndTag(position, TAG);
                // final String url = url;//"http://baobab.wdjcdn.com/14564977406580.mp4";
                 //listVideoUtil.setCachePath(new File(FileUtils.getPath()));
-                fragment_first.listVideoUtil.startPlay("http://"+map.get("vid_url").toString());
+                fragment_first.listVideoUtil.startPlay(map.get("vid_url").toString());
                 User user=new User();
                 if(user.historys==null)
                     user.historys=new ArrayList<HashMap<String, Object>>();

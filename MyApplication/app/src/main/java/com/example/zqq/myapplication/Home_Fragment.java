@@ -248,4 +248,8 @@ public void addview(View view)
         }
     }
 
+    public void getVideos() {
+       // fragment_first.mWaveSwipeRefreshLayout.setRefreshing(true);
+        fragment_first.getVideos();
+    }
 }

@@ -40,8 +40,6 @@ HashMap<String,Object> map;
 
     public void pul(final String _id)
     {
-        final Message msg=new Message();
-        final Bundle bundle=new Bundle();
         handler=(Handler)map.get("handler");
        final Context context=(Context)map.get("context");
         User user=new User();
@@ -50,14 +48,14 @@ HashMap<String,Object> map;
             //  Toast.makeText(con.this, "File not exits！", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        Log.e("videoUrl",file.getPath().toString());
         Map<String, String> param = new HashMap<>();
         Pair<String, File> pair = new Pair("video", file);
         param.put("file","videofile");
 
         OkHttpProxy
                 .upload()
-                .url("http://192.168.1.109:3333/user/video/push/"+_id+"?token="+user.token)
+                .url("http://copytp.herokuapp.com/user/video/push/"+_id+"?token="+user.token)
                 .file(pair)
                 .setParams(param)
                 .setWriteTimeOut(20)
@@ -74,15 +72,18 @@ HashMap<String,Object> map;
                             JSONObject js=new JSONObject(str);
                             Log.e("video",str);
                             Log.e("完成", String.valueOf(response.isSuccessful()));
-                            handler.sendEmptyMessage(2);
                         }catch(JSONException e)
                         {
                             Log.e("完成错误", e.toString());
 
                         }finally {
-                            Looper.prepare();
-                            Toast.makeText(context,"完成",Toast.LENGTH_SHORT).show();
-                            Looper.loop();
+                            msg=new Message();
+                            bundle=new Bundle();
+                            bundle.putString("?","完成");
+                            msg.what=(Integer)map.get("what");
+                            msg.setData(bundle);
+                            handler.sendMessage(msg);
+
                         }
                     }
 
@@ -130,7 +131,7 @@ HashMap<String,Object> map;
 
 
                             msg.arg1=pro;
-                            msg.what=0;
+                            msg.what=(Integer)map.get("what");
                             msg.setData(b);
 
                             //  handler.sendMessage(msg);
@@ -189,8 +190,13 @@ HashMap<String,Object> map;
             Log.e("上传视频信息时",e.toString());
         }
         finally {
-
-
+            handler=(Handler) map.get("handler");
+            msg=new Message();
+            bundle=new Bundle();
+            bundle.putString("?","其他数据上传成功");
+            msg.what=(Integer)map.get("what");
+            msg.setData(bundle);
+            handler.sendMessage(msg);
         }
 
     }
@@ -200,6 +206,7 @@ HashMap<String,Object> map;
         String path=map.get("path").toString();
         String str=path.substring(0,path.lastIndexOf(".")-1);
         File f=new File(str+((int)(1+Math.random()*(10-1+1)))+".png");
+
         //	compressImage(getVideoThumb(file.getPath()),f.getPath());
         //改后缀名
         //获得视频截图后缩小
@@ -213,7 +220,7 @@ HashMap<String,Object> map;
         Pair<String, File> pair = new Pair("cover", f);
         OkHttpProxy
                 .upload()
-                .url("http://192.168.1.109:3333/user/video/cover?token="+user.token)
+                .url("http://copytp.herokuapp.com/user/video/cover?token="+user.token)
                 .file(pair)
                 .setParams(param)
                 .setWriteTimeOut(20)
@@ -238,11 +245,20 @@ HashMap<String,Object> map;
 
                         handler=(Handler) map.get("handler");
                         //将截图id和url传过去
-                        videodata("http://192.168.1.109:3333/user/video/detail?scsId="+jsonObject.getString("_id")+"&token="+user.token);
+                        videodata("http://copytp.herokuapp.com/user/video/detail?scsId="+jsonObject.getString("_id")+"&token="+user.token);
 
                     } catch (JSONException e) {
                         Log.e("上传截图",e.toString());
-                    }
+                    }finally {
+                            handler=(Handler) map.get("handler");
+                            msg=new Message();
+                            bundle=new Bundle();
+                            bundle.putString("?","封面上传成功");
+                            msg.what=(Integer)map.get("what");
+                            msg.setData(bundle);
+                            handler.sendMessage(msg);
+
+                        }
 
                 }
 
@@ -271,6 +287,8 @@ HashMap<String,Object> map;
         OkHttpClient client=new OkHttpClient();
         JSONObject jsonObject = null;
         JSONArray jsonArray = null;
+        Bundle bundle=new Bundle();
+        ;
         final Context context=(Context)map.get("context");
 
         String str = null;
@@ -291,31 +309,29 @@ HashMap<String,Object> map;
             str = response.body().string();
             Log.e("post",str);
             jsonObject=new JSONObject(str);
-            msg=new Message();
-               msg.what=(Integer)map.get("what");
-              msg.obj=jsonObject;
-             handler.sendMessage(msg);
+            bundle.putString("?","成功");
 
 
 
 
-
-
-    } catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            Log.e("post",e.toString());
-            Looper.prepare();
-            Toast.makeText((Context)map.get("context"),e.toString(),Toast.LENGTH_LONG).show();
-            Looper.loop();
+            Log.e("postIO",e.toString());
+            bundle.putString("?","连接失败");
 
         } catch(JSONException e)
         {
-            Log.e("post",e.toString());
+            Log.e("postJS",e.toString());
+            bundle.putString("?","失败");
         }
         finally {
-            Looper.prepare();
-            Toast.makeText(context,"完成",Toast.LENGTH_SHORT).show();
-            Looper.loop();
+           msg=new Message();
+            msg.what=(Integer)map.get("what");
+            msg.setData(bundle);
+            msg.obj=jsonObject;
+            handler.sendMessage(msg);
+
+
         }
 
     }

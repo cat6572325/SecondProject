@@ -122,6 +122,7 @@ public class Fragment_Fifth extends Fragment {
                             }
                         }
                         AddData(user.all_video);
+                        countItems=5;
                     } catch (JSONException e) {
                         Log.e("转换json的时候",e.toString());
                         //获取失败的时候
@@ -159,7 +160,7 @@ public class Fragment_Fifth extends Fragment {
         }
     };
     PopupWindow mPopWindow;
-    int countItems=0;//定义全局的每次刷新将获得多少个视频
+    int countItems=6;//定义全局的每次刷新将获得多少个视频
 
     int lastVisibleItem;
     int firstVisibleItem;
@@ -232,7 +233,7 @@ public class Fragment_Fifth extends Fragment {
             @Override
             public void onRefresh() {
 
-                new Task().execute();
+           //     new Task().execute();
 
             }
         });

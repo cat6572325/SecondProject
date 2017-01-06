@@ -1,41 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
     android:baselineAligned="false">
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:orientation="vertical"
+        android:background="#00000000"
+        android:id="@+id/fans_title"
+        >
+      <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             >
 
-            <Button
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="24sp"
+                android:textColor="#000000"
                 android:text="我的粉丝"/>
-        </RelativeLayout>
+          <RelativeLayout
+              android:layout_width="56dp"
+              android:layout_height="match_parent"
+              android:id="@+id/fans_back_l"
+              android:background="@drawable/click_to_gray"
+              >
+              <ImageView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerInParent="true"
+                  android:background="@mipmap/back_black"
+                  />
+          </RelativeLayout>
+
+      </RelativeLayout>
 
 
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"
-        />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/fans_title"
+        >
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -43,5 +56,12 @@
             android:id="@+id/History_recyclerView"
             >
 
-        </android.support.v7.widget.RecyclerView>  </LinearLayout>
-</LinearLayout>
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:layout_below="@id/fans_title"
+        android:background="@drawable/shadow_line_down"
+        />
+</RelativeLayout>

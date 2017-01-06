@@ -98,7 +98,24 @@ public class Round_Video_ extends FragmentActivity
                     ResetCamera();
                     break;
 
+                case 2:
+                    //顶部计时器
+                    minutes++;
+                    if (hours==4 || minutes==60)
+                    {
+                        stop();
+                        flag=0;
+                    }else
+                    {
+                        if (minutes==9)
+                        {
+                            hours++;
+                            minutes=0;
+                        }
+                    }
 
+                    top_time.setText(hours+":"+minutes);
+                    break;
                 case 3:
 
                     if (bundle != null)
@@ -113,6 +130,7 @@ public class Round_Video_ extends FragmentActivity
     };
 
     Video_Data_ video_data_;
+    int hours,minutes;
     User user = new User();
    static int message = 0;
     EditText title_e;
@@ -127,7 +145,7 @@ public class Round_Video_ extends FragmentActivity
     int count = 0;
     Timer mTimer = new Timer();
     TimeUnit t;
-    File file = new File("/sdcard/RoundVideo/RoudVideos" + randomProdoction() + ".3gp");
+    File file = new File("/sdcard/RoundVideo/RoudVideos" + randomProdoction() + ".mp4");
     File_with_ file_with;
     String COMMA_PATTERN = ",";
     TextView top_time;
@@ -159,7 +177,6 @@ public class Round_Video_ extends FragmentActivity
 
             {////点击开始录像
                 if (flag == 0) {
-
                     if (camera != null)
                        // sound.setVisibility(View.INVISIBLE);
               //      turnC.setVisibility(View.INVISIBLE);
@@ -168,6 +185,7 @@ public class Round_Video_ extends FragmentActivity
                         camera.stopPreview();
                         camera.release();
                         camera = null;
+
                     }
                     start();
                     flag = 1;
@@ -289,7 +307,7 @@ public class Round_Video_ extends FragmentActivity
     class task extends TimerTask {
         public View v;
         int x, y;
-        boolean b;
+
         int count;
 
         public task(int count) {
@@ -302,17 +320,8 @@ public class Round_Video_ extends FragmentActivity
             runOnUiThread(new Runnable() {      // UI thread
                 @Override
                 public void run() {
+                    mHandler.sendEmptyMessage(2);
 
-                    min++;
-                    if (min == 60) {
-                        min = 0;
-                        minute++;
-                    }
-                    if (min > 9) {
-                        top_time.setText(minute + ":" + min);
-                    } else {
-                        top_time.setText(minute + ":0" + min);
-                    }
                 }
 
             });
@@ -396,6 +405,9 @@ public class Round_Video_ extends FragmentActivity
             //startButton.setEnabled(false);
             //stopButton.setEnabled(true);
             isRecording = true;
+            startButton.setBackgroundResource(R.mipmap.stop);
+            turnC.setVisibility(View.INVISIBLE);
+            startTopTimer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -453,7 +465,7 @@ public class Round_Video_ extends FragmentActivity
             camera.setPreviewDisplay(mSurfaceView.getHolder());
 
             camera.setDisplayOrientation(90);
-            camera.setPreviewDisplay(mSurfaceView.getHolder());
+          //  camera.setPreviewDisplay(mSurfaceView.getHolder());
             updateCameraParameters();
 
             camera.startPreview();
@@ -466,7 +478,14 @@ public class Round_Video_ extends FragmentActivity
             Log.e("初始化摄像头时",e.toString());
         }
     }
-    private void                                                                                                                                                                                                                                                                                                                                                                                                                                                                     updateCameraParameters() {
+    private void startTopTimer()
+    {
+        Prog_task = new task(count);
+        //新建一个方法
+        mTimer.schedule(Prog_task, 2000, 1000);
+        //设每一秒调用一次
+    }
+    private void updateCameraParameters() {
         if (camera != null) {
             Camera.Parameters p = camera.getParameters();
 

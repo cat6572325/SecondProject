@@ -98,7 +98,7 @@ public class Fragment_First extends Fragment {
                         for (int i = 0; i <jsonArray.length() ; i++) {
                             Log.e("jsonArrayLength",":"+jsonArray.length());
                             jsonObject= jsonArray.getJSONObject(i);//获取第i个视频
-                            if (jsonObject.getJSONObject("video_url").toString()==null)
+                            if (jsonObject.optJSONObject("video_url")==null)
                             {
 
                             }else {
@@ -122,16 +122,17 @@ public class Fragment_First extends Fragment {
                             }
                         }
                         AddData(user.all_video);
+                        mWaveSwipeRefreshLayout.setRefreshing(false);
                      } catch (JSONException e) {
                         Log.e("转换json的时候",e.toString());
                         //获取失败的时候
                         if (countItems==0)
                         {//等于0还出错表示没有这页，也就不继续获取了
                             Log.e("目前未加载数为 ",countItems+"个");
-
+                          //  countItems=5;
                         }else {
-                            countItems--;//减去1
-                            getVideos();
+                          //  countItems--;//减去1
+                          //  getVideos();
                         }
 
                     }finally {
@@ -159,7 +160,7 @@ public class Fragment_First extends Fragment {
         }
     };
     PopupWindow mPopWindow;
-    int countItems=0;//定义全局的每次刷新将获得多少个视频
+    int countItems=1;//定义全局的每次刷新将获得多少个视频
 
     int lastVisibleItem;
     int firstVisibleItem;
@@ -169,7 +170,7 @@ public class Fragment_First extends Fragment {
     public ArrayList<HashMap<String, Object>> lists = new ArrayList<HashMap<String, Object>>(), lists2 = new ArrayList<HashMap<String, Object>>();
     private Second_Adapter second_adapter;
     //第三方刷新控件
-    WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
+    public WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
     public ListVideoUtil listVideoUtil;
     Get_Http_AsycTask get_http_asycTask;
     FrameLayout videoFullContainer;
@@ -321,18 +322,23 @@ public class Fragment_First extends Fragment {
     {//用于试用操作链表的临时方法
         second_adapter.notifyItemRemoved(position);
     }
-    private void getVideos()
+    public void getVideos()
     {//TODO 调用Asynstask启动线程加载数据
         HashMap<String,Object> map=new HashMap<>();
         map.put("handler",mHandler);
+        map.put("context",getContext());
+        map.put("what",0);
         MyAsycTask myAsycTask=new MyAsycTask(map);
 
      int total=second_adapter.getItemCount()/5;
         //通过总数处以6来获得应该从哪一页开始获取视频
         Log.e("获取第",""+total+"页,"+countItems+"个视频");
-        myAsycTask.execute("http://192.168.1.109:3333/video/?per="+countItems+"&page="+(total+1));
+
+        myAsycTask.execute("http://copytp.herokuapp.com/video/?per=5&page="+countItems);//+"&page="+(total+1));
         //启动线程联网后就返回
+        countItems++;
     }
+
     public void AddData(ArrayList<HashMap<String,Object>> Datalist)
     {
 
