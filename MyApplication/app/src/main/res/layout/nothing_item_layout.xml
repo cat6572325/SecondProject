@@ -21,16 +21,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="目前没有播放过的视频记录"
+        android:text="目前没有播放过的视频记录\n发视频才会有人关注你哦"
         android:gravity="center"
-        android:textSize="40sp"
+        android:id="@+id/nothink_item_t"
+        android:textColor="#9b9b9b"
+        android:textSize="18sp"
         />
         <Button
             android:layout_width="266dp"
             android:layout_height="47dp"
             android:layout_margin="30dp"
-            android:background="@android:color/holo_red_light"
+            android:background="@drawable/click_to_red"
             android:text="立即关注"
+            android:textSize="18sp"
+            android:id="@+id/nothink_item_b"
+            android:textColor="#ffffff"
             />
     </LinearLayout>
 </LinearLayout>

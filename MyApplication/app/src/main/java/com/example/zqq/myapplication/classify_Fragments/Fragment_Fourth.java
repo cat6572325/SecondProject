@@ -182,7 +182,7 @@ public class Fragment_Fourth extends Fragment {
              getActivity().  getWindow().setExitTransition(new Explode());
          }*/
 
-        v = inflater.inflate(R.layout.home_fragments_layout, container, false);
+        v = inflater.inflate(R.layout.h_fourth, container, false);
         //   Bundle bundle = getArguments();
         // String agrs1 = bundle.getString("agrs1");
 
@@ -205,7 +205,7 @@ public class Fragment_Fourth extends Fragment {
 
         home_rec = (RecyclerView) view.findViewById(R.id.fragments_First_rv);
 
-        mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) v.findViewById(R.id.main_swipe);
+        mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) v.findViewById(R.id.fourth_swipe);
         mWaveSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.RED);
         //mWaveSwipeRefreshLayout.setWaveColor(Color.argb(100,255,0,0));
         mWaveSwipeRefreshLayout.setWaveColor(0xffff0000);

@@ -39,14 +39,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".Round_Video_"></activity>
-        <activity android:name=".Register_"></activity>
         <activity android:name=".History_"></activity>
         <activity android:name=".Third_class.Follow_"></activity>
-        <activity android:name=".Third_class.Fans_"
-
-            >
-
+        <activity android:name=".Third_class.Fans_">
         </activity>
+        <activity android:name=".Third_class.Like_"></activity>
     </application>
 
 </manifest>

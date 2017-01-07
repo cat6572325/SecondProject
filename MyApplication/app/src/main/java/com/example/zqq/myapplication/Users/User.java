@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class User {
     public static String nickname=null,password=null,phone=null,headurl=null,token=null,id=null;
     public static HashMap<String,Object> wait_UpLoad=null;
-    public static ArrayList<HashMap<String,Object>> all_video=null,historys=null;
+    public static ArrayList<HashMap<String,Object>> all_video=null,historys=null,Likes=null;
     public  static UpLoad_LruCache lruCache;
     public void settoken(String token)
     {

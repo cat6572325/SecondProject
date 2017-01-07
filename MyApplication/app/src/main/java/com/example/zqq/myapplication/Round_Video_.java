@@ -113,8 +113,12 @@ public class Round_Video_ extends FragmentActivity
                             minutes=0;
                         }
                     }
-
-                    top_time.setText(hours+":"+minutes);
+                    if (minutes>9) {
+                        top_time.setText("0" + hours + ":" + minutes);
+                    }else
+                    {
+                        top_time.setText("0" + hours + ":0" + minutes);
+                    }
                     break;
                 case 3:
 
@@ -135,6 +139,7 @@ public class Round_Video_ extends FragmentActivity
    static int message = 0;
     EditText title_e;
     private Button startButton, stopButton, playButton;
+    private LinearLayout stop_round;
     private SurfaceView mSurfaceView;
     private boolean isRecording;
     private MediaRecorder mediaRecorder;
@@ -191,9 +196,7 @@ public class Round_Video_ extends FragmentActivity
                     flag = 1;
 
 
-                } else {//点击结束录像
-                    stop();
-                    flag = 0;
+                } else {
                 }
 
             }
@@ -201,6 +204,11 @@ public class Round_Video_ extends FragmentActivity
 
     }//oncreate()
 
+    public void stop_Round(View view){
+        //点击结束录像
+        stop();
+        flag = 0;
+    }
     private void setDefaultFragment()
     {
 
@@ -210,14 +218,16 @@ public class Round_Video_ extends FragmentActivity
                   video_data_ = new Video_Data_();
                   fragmentTransaction.add(R.id.Round_Framelayout, video_data_);
                   fragmentTransaction.commit(); // 提交
+                  //video_data_.setbitmap(file_with.GetFile().getPath());
               }
     }
     public void initView() {
         top_time = (TextView) this.findViewById(R.id.RoundTop_time);
         turnC = (ImageView) this.findViewById(R.id.Round_turn);
-        startButton=(Button)this.findViewById(R.id.start_round);
+        startButton=(Button) this.findViewById(R.id.start_round);
         round_back_img = (ImageView) this.findViewById(R.id.round_back);
         rounding_time_img = (ImageView) this.findViewById(R.id.rounding_time_img);
+        stop_round=(LinearLayout)findViewById(R.id.stop_round);
          round_back_img.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,6 +238,10 @@ public class Round_Video_ extends FragmentActivity
 
 
     }//initView
+    public void Round_back(View view)
+    {
+        onBackPressed();
+    }
     //开始录制前设置不把声音录进去
     public void SetsoundState(View view)
     {
@@ -405,7 +419,8 @@ public class Round_Video_ extends FragmentActivity
             //startButton.setEnabled(false);
             //stopButton.setEnabled(true);
             isRecording = true;
-            startButton.setBackgroundResource(R.mipmap.stop);
+            startButton.setVisibility(View.INVISIBLE);
+
             turnC.setVisibility(View.INVISIBLE);
             startTopTimer();
         } catch (Exception e) {
@@ -462,10 +477,10 @@ public class Round_Video_ extends FragmentActivity
             } else {
                 camera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
             }
-            camera.setPreviewDisplay(mSurfaceView.getHolder());
+          //  camera.setPreviewDisplay(mSurfaceView.getHolder());
 
             camera.setDisplayOrientation(90);
-          //  camera.setPreviewDisplay(mSurfaceView.getHolder());
+           camera.setPreviewDisplay(mSurfaceView.getHolder());
             updateCameraParameters();
 
             camera.startPreview();

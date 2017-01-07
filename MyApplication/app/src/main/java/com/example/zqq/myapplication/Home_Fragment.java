@@ -103,9 +103,9 @@ private void initView(View view)
     fragments.add(fragment_second);
     fragments.add(fragment_third);
     fragments.add(fragment_fourth);
-    fragments.add(fragment_fifth);
-    fragments.add(fragment_sixth);
-    fragments.add(fragment_seventh);
+   // fragments.add(fragment_fifth);
+   // fragments.add(fragment_sixth);
+   // fragments.add(fragment_seventh);
 
     //创建ViewPager的adapter
     FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments, titles);
@@ -149,13 +149,14 @@ private void initView(View view)
         popupwindow_recyclerView=(RecyclerView)contentView.findViewById(R.id.popupwind_recyclerView);
         //通过布局获取recyclerview实例
         mAdapter = new Mine_Recycler_Adapter(popwindow_recyclers);
+        int spanCount = 5; // 3 columns
+        int spacing = 2; // 50px
+        boolean includeEdge = false;
+        popupwindow_recyclerView.addItemDecoration(new RecyclerView_Space(spanCount, spacing, includeEdge));
+
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 5);
         //设置布局为一行5列的样式
         popupwindow_recyclerView.setLayoutManager(gridLayoutManager);
-        int spanCount = 5; // 3 columns
-        int spacing = 50; // 50px
-        boolean includeEdge = false;
-        popupwindow_recyclerView.addItemDecoration(new RecyclerView_Space(spanCount, spacing, includeEdge));
 
         for (int i = 0; i <20 ; i++) {
             HashMap<String,Object> map=new HashMap<>();

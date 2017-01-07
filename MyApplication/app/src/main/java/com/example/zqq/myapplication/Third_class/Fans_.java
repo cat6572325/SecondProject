@@ -68,6 +68,7 @@ public class Fans_ extends AppCompatActivity {
             HashMap<String,Object> map=new HashMap<>();
             map.put("layout",3);
             map.put("context", Fans_.this);
+        map.put("text","目前没有任何粉丝哦");
             maps.add(map);
             mAdapter.notifyDataSetChanged();
 
@@ -78,5 +79,8 @@ public class Fans_ extends AppCompatActivity {
 
 
     }
-
+    public void back(View view)
+    {
+        onBackPressed();
+    }
 }

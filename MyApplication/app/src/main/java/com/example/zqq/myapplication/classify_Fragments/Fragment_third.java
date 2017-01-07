@@ -16,7 +16,7 @@ public class Fragment_third  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.home_fragments_layout, container, false);
+        v = inflater.inflate(R.layout.h_third, container, false);
         //   Bundle bundle = getArguments();
         // String agrs1 = bundle.getString("agrs1");
 

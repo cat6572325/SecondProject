@@ -62,6 +62,7 @@ public class Follow_ extends AppCompatActivity {
             HashMap<String,Object> map=new HashMap<>();
             map.put("layout",3);
             map.put("context", Follow_.this);
+        map.put("text","目前没有任何关注哦");
             maps.add(map);
             mAdapter.notifyDataSetChanged();
 
@@ -72,5 +73,8 @@ public class Follow_ extends AppCompatActivity {
 
         }
 
-
+    public void Followback(View view)
+    {
+        onBackPressed();
+    }
 }

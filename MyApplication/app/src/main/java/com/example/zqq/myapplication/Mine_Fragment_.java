@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,11 +21,12 @@ import com.example.zqq.myapplication.Adapters.Mine_Recycler_Adapter;
 import com.example.zqq.myapplication.Adapters.Second_Adapter;
 import com.example.zqq.myapplication.Third_class.Fans_;
 import com.example.zqq.myapplication.Third_class.Follow_;
+import com.example.zqq.myapplication.Third_class.Like_;
 import com.example.zqq.myapplication.Users.User;
-import com.example.zqq.myapplication.Utils.UpLoad_LruCache;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.example.zqq.myapplication.Utils.*;
 /**
  * Created by zqq on 17-1-4.
  */
@@ -82,42 +85,71 @@ public class Mine_Fragment_ extends Fragment {
         });
         mAdapter=new Mine_Recycler_Adapter(maps);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
-
+        mine_recycler.setAdapter(mAdapter);
+        //设置Item增加、移除动画
+        mine_recycler.setItemAnimator(new DefaultItemAnimator());
+//添加分割线
         mine_recycler.setLayoutManager(gridLayoutManager);
 
         Invatation();
-        mine_recycler.setAdapter(mAdapter);
+
+
         //条目点击事件
         mAdapter.setOnClickListener(new Mine_Recycler_Adapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(View view, int position) {
                 Toast.makeText(getActivity(), position + "========Click:", Toast.LENGTH_SHORT).show();
+                TextView txt=(TextView)view.findViewById(R.id.item_title);
+                if (txt!=null) {
+                    if (txt.getText().toString().equals("我的订阅")) {
+
+                    }
+                    if (txt.getText().toString().equals("我喜欢的")) {
+                        startActivity(new Intent(getContext(),Like_.class));
+
+                    }
+                    if (txt.getText().toString().equals("播放历史")) {
+                        startActivity(new Intent(getActivity(),History_.class));
+
+                    }
+                    if (txt.getText().toString().equals("兴趣选择")) {
+
+                    }
+                    if (txt.getText().toString().equals("反馈")) {
+
+                    }
+                    if (txt.getText().toString().equals("版本检测")) {
+
+                    }
+                    if (txt.getText().toString().equals("预留")) {
+
+                    }
+                }
                 switch (position)
                 {
-                    case 0:
+                    case 1:
                         //我的订阅
                         break;
 
-                    case 1:
+                    case 2:
                         //喜欢的
                         break;
-                    case 2:
-                        //播放历史
-                        startActivity(new Intent(getActivity(),History_.class));
-                        break;
                     case 3:
+                        //播放历史
+                        break;
+                    case 5:
                         //兴趣选择
                         break;
 
-                    case 4:
+                    case 6:
                         //反馈
                         break;
 
-                    case 5:
+                    case 7:
                         //版本检测
                         break;
 
-                    case 6:
+                    case 8:
                         //预留
                         break;
                 }
@@ -170,12 +202,31 @@ public class Mine_Fragment_ extends Fragment {
     ,R.mipmap.feedback
     ,R.mipmap.mobile};
     for (int i = 0; i <6 ; i++) {
+        if (i==3 | i==0)
+    {
+
+        HashMap<String,Object> nothink=new HashMap<>();
+        nothink.put("layout",5);
+        nothink.put("context",getContext());
+        nothink.put("title",titles[i]);
+        nothink.put("icon_id",icons[i]);
+        maps.add(nothink);
+    }else
+        {
+            HashMap<String,Object> nothink=new HashMap<>();
+            nothink.put("layout",4);
+            nothink.put("context",getContext());
+            nothink.put("title",titles[i]);
+            nothink.put("icon_id",icons[i]);
+            maps.add(nothink);
+        }
         HashMap<String,Object> map=new HashMap<>();
         map.put("layout",0);
         map.put("context",getContext());
         map.put("title",titles[i]);
         map.put("icon_id",icons[i]);
         maps.add(map);
+
     }
     mAdapter.notifyDataSetChanged();
 

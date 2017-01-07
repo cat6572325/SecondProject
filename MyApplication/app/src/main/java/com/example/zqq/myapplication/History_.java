@@ -1,19 +1,30 @@
 package com.example.zqq.myapplication;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.zqq.myapplication.Adapters.Mine_Recycler_Adapter;
 import com.example.zqq.myapplication.Adapters.Second_Adapter;
 import com.example.zqq.myapplication.Users.User;
 
+import java.io.IOError;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by zqq on 17-1-5.
@@ -21,6 +32,8 @@ import java.util.HashMap;
 
 public class History_ extends AppCompatActivity {
     RecyclerView History_RecyclerView;
+   public AlertDialog.Builder dialog = null;
+
     public ArrayList<HashMap<String, Object>> maps = new ArrayList<HashMap<String, Object>>();
     private Mine_Recycler_Adapter mAdapter;
 
@@ -66,22 +79,53 @@ public class History_ extends AppCompatActivity {
             HashMap<String,Object> map=new HashMap<>();
             map.put("layout",3);
             map.put("context",History_.this);
+            map.put("text","目前没有任何播放历史哦");
             maps.add(map);
             mAdapter.notifyDataSetChanged();
-
         }else
         {
             for (int i = 0; i < user.historys.size(); i++) {
                 HashMap<String,Object> map=new HashMap<>();
                 map.put("layout",2);
+                map.put("text","目前没有任何播放记录哦\n");
                 map.put("context",History_.this);
                 maps.add(map);
             }
             mAdapter.notifyDataSetChanged();
-
-
-
         }
     }
+    public void Historyback(View view)
+    {
+        onBackPressed();
+    }
+    private void HistoryClear()
+    {
+        User.historys.clear();
+        maps.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+    public void clerAll(View view)
+    {
+        LayoutInflater inflater = getLayoutInflater();
+        final View layout = inflater.inflate(R.layout.history_delete_dialog,
+                (ViewGroup) findViewById(R.id.dialog));
+        Button sure,cancel;
+        dialog = new AlertDialog.Builder(this).setView(layout);
 
+        sure=(Button)view.findViewById(R.id.sure);
+        cancel=(Button)view.findViewById(R.id.cancel);
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HistoryClear();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        dialog.show();
+    }
 }

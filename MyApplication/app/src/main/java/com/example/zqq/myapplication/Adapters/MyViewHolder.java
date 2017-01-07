@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,10 +25,12 @@ class MyViewHolder extends RecyclerView.ViewHolder {
     FrameLayout frameLayout;
     ImageView btn;
     ImageView imageView;
-    TextView plays_t,likes_t,comments_t;
+    TextView plays_t,likes_t,comments_t,search_t;
     TextView nickname;
     ListVideoUtil listVideoUtil;
     RelativeLayout wannaHideOfLayout;
+
+    LinearLayout more_l;
 
     Fragment_First fragment_first;
     public MyViewHolder(Context context,View itemView,Fragment_First fragment_first) {
@@ -39,6 +42,9 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         likes_t=(TextView)itemView.findViewById(R.id.likes_t);
         comments_t=(TextView)itemView.findViewById(R.id.comments_t);
         nickname=(TextView) itemView.findViewById(R.id.nickname);
+        search_t=(TextView)itemView.findViewById(R.id.search_t);
+        more_l=(LinearLayout)itemView.findViewById(R.id.home_more);
+
         imageView=new ImageView(context);
         this.fragment_first=fragment_first;
     }
@@ -47,7 +53,17 @@ class MyViewHolder extends RecyclerView.ViewHolder {
 
         //增加封面
          imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-         imageView.setImageResource(R.mipmap.ic_launcher);
+        if (position==0|position==2|position==3|position==6|position==8) {
+            imageView.setImageResource(R.drawable.a);
+        }else
+        {
+            if (position==1|position==4|position==5|position==7)
+            imageView.setImageResource(R.drawable.b);
+            else
+                imageView.setImageResource(R.drawable.c);
+        }
+
+
        fragment_first.listVideoUtil.addVideoPlayer(position, imageView, TAG
                 , myViewHolder.frameLayout, btn);
 

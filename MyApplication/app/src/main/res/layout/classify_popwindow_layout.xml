@@ -3,14 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-android:background="@drawable/frame_liter_width"
+    android:background="#ffffff"
     android:gravity="center_horizontal">
 <Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/testutton"
-    android:text="你点一下试试"
+    android:text=""
     />
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,15 +18,16 @@ android:background="@drawable/frame_liter_width"
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="20dp"
-
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5px"
+        android:layout_marginRight="5px"
         android:maxHeight="300dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:textColor="#000000"
-        android:id="@+id/popupwind_recyclerView"
-        android:text="=========这是一条分割线=========="/>
+        android:id="@+id/popupwind_recyclerView"/>
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@drawable/shadow_line_down"
+        />
 </LinearLayout>

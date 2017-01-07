@@ -24,7 +24,12 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
     private OnItemClickListener mListener;
     Context context;
     ArrayList<HashMap<String,Object>>  maps;
-    int[] layout = {R.layout.mine_recyclerview_item_layout,R.layout.pop_recycler_item_layout,R.layout.history_recyclerview_item_layout,R.layout.nothing_item_layout};
+    int[] layout = {R.layout.mine_recyclerview_item_layout
+            ,R.layout.pop_recycler_item_layout
+            ,R.layout.history_recyclerview_item_layout
+            ,R.layout.nothing_item_layout
+            ,R.layout.nothink_item_ready
+    ,R.layout.nothink_item_white};
     public Mine_Recycler_Adapter(ArrayList<HashMap<String,Object>> maps)
     {
         this.maps=maps;
@@ -86,7 +91,7 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
                 break;
             case 1:
                 //TODO 下拉选项表格
-                holder.popwindow_recycler_item_b.setText(maps.get(position).get("title").toString());
+                holder.popwindow_recycler_item_t.setText(maps.get(position).get("title").toString());
                 if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -113,7 +118,7 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
                 break;
             case 3:
                 //无内容item
-
+                holder.nothink_item_t.setText(maps.get(position).get("text").toString());
                 break;
         }
 

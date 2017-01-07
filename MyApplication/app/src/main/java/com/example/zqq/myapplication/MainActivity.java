@@ -67,9 +67,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             user.settoken(JS.getString("token"));
                             getmydatas();
                             //发送获取个人信息请求
-                            progressDialog.cancel();
-
-                        } catch (JSONException e) {
+                       } catch (JSONException e) {
                             Log.e("在登录成功时", e.toString());
 
                             progressDialog.setMessage("错误：" + JS.toString());
@@ -91,17 +89,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     if (bundle.getString("?").equals("封面上传成功"))
                     {
                         uploading_t.setText("封面上传完成");
+                        progress_t.setText(100+"%");
                     }
                     if (bundle.getString("?").equals("其他数据上传成功"))
                     {
                         uploading_t.setText("其他数据上传完成");
+                        progress_t.setText(100+"%");
                     }
+                    if (bundle.getString("?").equals("进度"))
+                    {
+                        progress_t.setText(msg.arg1+"%");
+                    }
+
                     if (bundle.getString("?").equals("完成"))
                     {
                         Toast.makeText(MainActivity.this,"上传结束",Toast.LENGTH_SHORT).show();
                         uplayout.setVisibility(View.INVISIBLE);
+                        upload_finish.setVisibility(View.VISIBLE);
+                        user=new User();
+                        user.wait_UpLoad.clear();
+
                         fg1.getVideos();
                     }
+
 
 
                     break;
@@ -116,17 +126,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         user.setmyid(jsonObject.optString("_id","null"));
 
                         Log.e("个人信息",jsonObject.toString());
+                        progressDialog.cancel();
+
 
                     } catch (JSONException e) {
                         Log.e("获取个人信息成功时",e.toString());
+                        progressDialog.setMessage("错误：" + JS.toString());
+
                     }
                     break;
+
             }
         }
     };
 
     User user;
     AlertDialog.Builder dialog = null;
+
     // 初始化顶部栏显示
     private ImageView titleLeftImv;
     private TextView titleTv;
@@ -134,7 +150,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Home_Fragment fg1;
     private Flop_Fragment_ fg2;
     private Release_Fragment fg3;
-    private Home_Fragment fg4;
+    private h_Message_Fragment fg4;
     private Mine_Fragment_ fg5;
     // 帧布局对象，用来存放Fragment对象
     private FrameLayout frameLayout;
@@ -143,6 +159,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private RelativeLayout secondLayout;
     private RelativeLayout thirdLayout;
     private RelativeLayout fourthLayout, mine_l;
+    LinearLayout upload_finish;
     private ImageView firstImage;
     private ImageView secondImage;
     private ImageView thirdImage;
@@ -150,7 +167,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private TextView firstText;
     private TextView secondText;
     private TextView thirdText;
-    private TextView fourthText, mine_txt,uploading_t;
+    private TextView fourthText, mine_txt,uploading_t,progress_t;
     private LinearLayout uplayout;
 
     // 定义几个颜色
@@ -195,6 +212,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mine_txt = (TextView) findViewById(R.id.mine_text);
         uplayout = (LinearLayout) findViewById(R.id.uploading);
         uploading_t=(TextView)findViewById(R.id.UpLoading_t);
+        progress_t=(TextView)findViewById(R.id.progress_t);
+        upload_finish=(LinearLayout)findViewById(R.id.upload_finish);
+
 
         firstLayout.setOnClickListener(MainActivity.this);
         secondLayout.setOnClickListener(MainActivity.this);
@@ -280,7 +300,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 //   fourthLayout.setBackgroundColor(gray);
                 fourthImage.setBackgroundResource(R.mipmap.messages_selected);
                 if (fg4 == null) {
-                    fg4 = new Home_Fragment();
+                    fg4 = new h_Message_Fragment();
                     fragmentTransaction.add(R.id.content, fg4);
                 } else {
 
@@ -454,10 +474,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (login.getText().toString().equals("点击更换登录")) {
+                    editText.setHint("输入帐号");
+                    editText1.setHint("输入密码");
+                    dialog.setTitle("登录");
+                    login.setText("点击更换注册");
+                }else
+                {
+                    editText.setHint("输入注册帐号");
+                    editText1.setHint("输入注册密码");
+                    dialog.setTitle("登录");
+                    login.setText("点击更换登录");
 
-                editText.setHint("输入帐号");
-                editText1.setHint("输入密码");
-                dialog.setTitle("登录");
+                }
 
             }
         });
@@ -465,6 +494,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         dialog.show();
 
 
+    }
+    public void HideuploadFinish(View view)
+    {
+        upload_finish.setVisibility(View.GONE);
     }
 
     private void getmydatas() {

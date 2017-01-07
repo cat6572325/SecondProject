@@ -24,6 +24,7 @@ import android.widget.ActionMenuView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,9 +116,11 @@ public class Fragment_First extends Fragment {
                                 map.put("comment_number", jsonObject.getString("comment_number"));
                                 map.put("like_number", jsonObject.getString("like_number"));
                                 map.put("view_number", jsonObject.getString("view_number"));
+
                                 map.put("tag", String.valueOf(System.currentTimeMillis()));
-                                if (user.all_video == null)
+                                if (user.all_video==null) {
                                     user.all_video = new ArrayList<>();
+                                }
                                 user.all_video.add(map);
                             }
                         }
@@ -199,33 +202,25 @@ public class Fragment_First extends Fragment {
         // 设置一个exit transition
          listVideoUtil = new ListVideoUtil(getContext());
         listVideoUtil.setFullViewContainer(videoFullContainer);
-
-
         listVideoUtil.setHideActionBar(true);
-
-
         home_rec = (RecyclerView) view.findViewById(R.id.fragments_First_rv);
-
         mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) v.findViewById(R.id.main_swipe);
         mWaveSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.RED);
         //mWaveSwipeRefreshLayout.setWaveColor(Color.argb(100,255,0,0));
         mWaveSwipeRefreshLayout.setWaveColor(0xffff0000);
         second_adapter = new Second_Adapter(getActivity(), lists,this,listVideoUtil);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
-
         home_rec.setLayoutManager(gridLayoutManager);
-
         home_rec.setAdapter(second_adapter);
         //条目点击事件
+
         second_adapter.setOnClickListener(new Second_Adapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(View view, int position) {
                 Toast.makeText(getActivity(), position + "========Click:", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onItemLongClickListener(View view, int position) {
-
             }
         });
 
@@ -315,6 +310,12 @@ public class Fragment_First extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getVideos();
 
     }
 
@@ -329,7 +330,6 @@ public class Fragment_First extends Fragment {
         map.put("context",getContext());
         map.put("what",0);
         MyAsycTask myAsycTask=new MyAsycTask(map);
-
      int total=second_adapter.getItemCount()/5;
         //通过总数处以6来获得应该从哪一页开始获取视频
         Log.e("获取第",""+total+"页,"+countItems+"个视频");
@@ -345,13 +345,17 @@ public class Fragment_First extends Fragment {
       //  HashMap<String ,Object> map=new HashMap<>();
        // map.put("title",Datalist.get(0).get("title").toString());
        // lists.add(map);
+
         for (int i = 0; i <Datalist.size() ; i++) {
             Log.e("DatalistSize",":"+Datalist.size());
             //将视频条目添加到集合类
             Datalist.get(i).put("VideoList",listVideoUtil);
             lists.clear();
+            HashMap<String,Object> map1=new HashMap<>();
+            map1.put("layout",1);
+            map1.put("text","大家都在搜");
+            lists.add(map1);
             lists.addAll(Datalist);
-
             listVideoUtil = new ListVideoUtil(getContext());
             // second_adapter.setListVideoUtil(listVideoUtil);
             listVideoUtil.setFullViewContainer(videoFullContainer);

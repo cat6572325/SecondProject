@@ -20,14 +20,14 @@ public class RecyclerView_Space extends RecyclerView.ItemDecoration{
     }
 
 
-  /*   @Override
+     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
        int pos = parent.getChildLayoutPosition(view);
         if(parent.getChildPosition(view) != 0)
-            outRect.top = space;
+        //    outRect.top = space;
         // 设置左右间距
-        outRect.set(space / 2, 0, space / 2, 0);
+      //  outRect.set(space / 2, 0, space / 2, 0);
 
 // 从第二行开始 top = mSpace
         if (pos >= count) {
@@ -35,5 +35,5 @@ public class RecyclerView_Space extends RecyclerView.ItemDecoration{
         } else {
             outRect.top = 0;
         }
-    }*/
+    }
 }

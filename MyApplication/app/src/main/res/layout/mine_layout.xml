@@ -9,7 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
+        android:layout_height="240dp"
         android:backgroundTint="#fafafb"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -31,8 +31,8 @@
                 app:layout_collapseMode="parallax"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#646d2b">
 
+                android:background="#646d2b">
                 <LinearLayout
                     android:layout_width="74dp"
                     android:layout_height="74dp"
@@ -56,6 +56,26 @@
                     android:id="@+id/nickname_Mine"
                     android:text="登陆"
                     android:textColor="@android:color/white" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_marginBottom="10dp"
+    android:visibility="invisible"
+    android:id="@+id/nickname_sex"
+    android:layout_above="@id/head_line"
+    >
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="昵称"
+    />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>
+
             </RelativeLayout>
 
 
@@ -186,6 +206,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/mine_recyclerview"
+
             >
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>

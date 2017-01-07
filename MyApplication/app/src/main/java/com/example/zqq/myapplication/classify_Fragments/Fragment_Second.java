@@ -1,5 +1,6 @@
 package com.example.zqq.myapplication.classify_Fragments;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,8 @@ import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.R;
 
 import java.util.HashMap;
+
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 /**
  * Created by zqq on 16-12-27.
@@ -34,12 +37,14 @@ public class Fragment_Second  extends Fragment {
         }
     };
     private View v;
+    //第三方刷新控件
+    public WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
     Get_Http_AsycTask get_http_asycTask=new Get_Http_AsycTask();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.home_fragments_layout, container, false);
+        v = inflater.inflate(R.layout.h_second, container, false);
         //   Bundle bundle = getArguments();
         // String agrs1 = bundle.getString("agrs1");
         //  tv.setText(agrs1);
@@ -51,7 +56,7 @@ public class Fragment_Second  extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser)
         {
-          getVideos();
+
         }
     }
     private void getVideos()
@@ -83,5 +88,19 @@ public class Fragment_Second  extends Fragment {
 
         }
 
+    }
+    private void initView()
+    {
+        mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) v.findViewById(R.id.second_swipe);
+        mWaveSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.RED);
+        //mWaveSwipeRefreshLayout.setWaveColor(Color.argb(100,255,0,0));
+        mWaveSwipeRefreshLayout.setWaveColor(0xffff0000);
+        mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+
+            }
+        });
     }
 }

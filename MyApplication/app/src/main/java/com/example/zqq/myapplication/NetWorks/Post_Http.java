@@ -126,15 +126,14 @@ HashMap<String,Object> map;
                         int pro = (int) ((progress.getCurrentBytes() + 0.0) / progress.getTotalBytes() * 100);
                         if (pro > 0) {
                             Bundle b=new Bundle();
-                            int o=pro;
                             Log.e("vide进度",String.valueOf(pro));
-
-
+                            msg=new Message();
+                            b.putString("?","进度");
                             msg.arg1=pro;
                             msg.what=(Integer)map.get("what");
                             msg.setData(b);
 
-                            //  handler.sendMessage(msg);
+                              handler.sendMessage(msg);
                         }
                         //  KLog.d("pro = " + pro + " getCurrentBytes = " + progress.getCurrentBytes() + " getTotalBytes = " + progress.getTotalBytes());
                     }

@@ -40,7 +40,7 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
 
     private List<Integer> counttype = new ArrayList<>();
 
-    int[] layout = {R.layout.home_item_layout};//,R.layout.infodetail_of_item_title_three_buttons, R.layout.paid_item};
+    int[] layout = {R.layout.home_item_layout,R.layout.search_item_layout};//,R.layout.infodetail_of_item_title_three_buttons, R.layout.paid_item};
     private OnItemClickListener mListener;
 
     public void setListVideoUtil(final ListVideoUtil listVideoUtil) {
@@ -132,7 +132,17 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
                             return true;
                         }
                     });
+                    holder.more_l.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //item的更多按钮
+                        }
+                    });
                 }
+                break;
+            case 1:
+                //搜索item
+                holder.search_t.setText(lists.get(position).get("text").toString());
                 break;
 
 

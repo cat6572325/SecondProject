@@ -29,12 +29,14 @@
               android:layout_width="56dp"
               android:layout_height="match_parent"
               android:id="@+id/fans_back_l"
+              android:clickable="true"
               android:background="@drawable/click_to_gray"
-              >
+              android:onClick="back">
               <ImageView
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_centerInParent="true"
+
                   android:background="@mipmap/back_black"
                   />
           </RelativeLayout>
