@@ -55,7 +55,7 @@ HashMap<String,Object> map;
 
         OkHttpProxy
                 .upload()
-                .url("http://copytp.herokuapp.com/user/video/push/"+_id+"?token="+user.token)
+                .url("http://tp.newteo.com/user/video/push/"+_id+"?token="+user.token)
                 .file(pair)
                 .setParams(param)
                 .setWriteTimeOut(20)
@@ -63,6 +63,12 @@ HashMap<String,Object> map;
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e("错误", e.toString());
+                        msg=new Message();
+                        bundle=new Bundle();
+                        bundle.putString("?","失败");
+                        msg.what=(Integer)map.get("what");
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
                     }
 
                     @Override
@@ -127,6 +133,7 @@ HashMap<String,Object> map;
                         if (pro > 0) {
                             Bundle b=new Bundle();
                             Log.e("vide进度",String.valueOf(pro));
+
                             msg=new Message();
                             b.putString("?","进度");
                             msg.arg1=pro;
@@ -208,6 +215,7 @@ HashMap<String,Object> map;
 
         //	compressImage(getVideoThumb(file.getPath()),f.getPath());
         //改后缀名
+
         //获得视频截图后缩小
         Bitmap bitmap=resizeImage(getVideoThumb(path),140,145);
         bitmap2File(bitmap,f);
@@ -219,7 +227,7 @@ HashMap<String,Object> map;
         Pair<String, File> pair = new Pair("cover", f);
         OkHttpProxy
                 .upload()
-                .url("http://copytp.herokuapp.com/user/video/cover?token="+user.token)
+                .url("http://tp.newteo.com/user/video/cover?token="+user.token)
                 .file(pair)
                 .setParams(param)
                 .setWriteTimeOut(20)
@@ -244,7 +252,7 @@ HashMap<String,Object> map;
 
                         handler=(Handler) map.get("handler");
                         //将截图id和url传过去
-                        videodata("http://copytp.herokuapp.com/user/video/detail?scsId="+jsonObject.getString("_id")+"&token="+user.token);
+                        videodata("http://tp.newteo.com/user/video/detail?scsId="+jsonObject.getString("_id")+"&token="+user.token);
 
                     } catch (JSONException e) {
                         Log.e("上传截图",e.toString());

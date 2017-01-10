@@ -69,13 +69,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             //发送获取个人信息请求
                        } catch (JSONException e) {
                             Log.e("在登录成功时", e.toString());
-
                             progressDialog.setMessage("错误：" + JS.toString());
                         }
                     }
                     if (bundle.getString("?").equals("失败")) {
                         try {
-                            Toast.makeText(MainActivity.this,JS.getString("error"),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,JS.getString("error"),Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             Log.e("登录失败",e.toString());
                         }
@@ -85,6 +84,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         break;
                 case 2:
                     //上传成功
+                    if (bundle.getString("?").equals("失败"))
+                    {
+                        uplayout.setVisibility(View.INVISIBLE);
+                        user=new User();
+                        user.wait_UpLoad.clear();
+                        Toast.makeText(MainActivity.this,"上传失败，或许你需要重新录制并且上传",Toast.LENGTH_SHORT).show();
+                    }
 
                     if (bundle.getString("?").equals("封面上传成功"))
                     {
@@ -107,9 +113,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         uplayout.setVisibility(View.INVISIBLE);
                         upload_finish.setVisibility(View.VISIBLE);
                         user=new User();
-                        user.wait_UpLoad.clear();
-
-                        fg1.getVideos();
+                        fg1.ShowAdd(user.wait_UpLoad);
+                        //fg1.getVideos();
                     }
 
 
@@ -117,7 +122,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     break;
                 case 3:
                     //TODO 获取个人信息，只有登陆成功才自动调用
-
                     try {
                         JSONObject jsonObject=new JSONObject((String)msg.obj);
                         user=new User();
@@ -127,10 +131,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                         Log.e("个人信息",jsonObject.toString());
                         progressDialog.cancel();
-
+                        startActivityForResult(new Intent(MainActivity.this,Round_Video_.class),0);
 
                     } catch (JSONException e) {
                         Log.e("获取个人信息成功时",e.toString());
+
                         progressDialog.setMessage("错误：" + JS.toString());
 
                     }
@@ -291,7 +296,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (user.id != null) {
                     startActivityForResult(new Intent(MainActivity.this, Round_Video_.class), 0);
                 } else {
-                   registerpop();
+                 registerpop();
                 }
                 break;
             case 3:
@@ -447,7 +452,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                     map.put("method", "post");
                                     MyAsyncTask myAsycTask = new MyAsyncTask(map, formBody);
                                     login.setText("请稍等..");
-                                    myAsycTask.execute("http://copytp.herokuapp.com/login");
+                                    myAsycTask.execute("http://tp.newteo.com/login");
 
 
                             }else{
@@ -455,7 +460,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                 login.setText("请稍等..");
                                 MyAsyncTask myAsycTask = new MyAsyncTask(map, formBody);
 
-                                myAsycTask.execute("http://copytp.herokuapp.com/reg");
+                                myAsycTask.execute("http://tp.newteo.com/reg");
                             }
                         }catch(IOError e)
                             {
@@ -510,7 +515,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         map.put("what", 3);
         map.put("method", "get");
         MyAsyncTask myAsycTask = new MyAsyncTask(map, formBody);
-        myAsycTask.execute("http://copytp.herokuapp.com/user/info?token=" + user.token);
+        myAsycTask.execute("http://tp.newteo.com/user/info?token=" + user.token);
     }
 
     class MyAsyncTask extends AsyncTask<String, Void, String> {//TODO 异步
@@ -577,7 +582,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         //  map.put("videourl","http://192.168.1.109:3333/video/push/:videoId?token=${token}");
         // map.put("title","");
         Post_Http post_http = new Post_Http(map);
-        post_http.loadvideopng();//启动上传三步骤
+        User user=new User();
+        post_http.videodata("http://tp.newteo.com/user/video/detail?token="+user.token);//启动上传三步骤
 
     }
 

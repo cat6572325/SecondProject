@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.zqq.myapplication.Utils.WatcherListener;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,9 +54,10 @@ public class Video_Data_ extends Fragment{
                 msg.obj=editText.getText().toString();
                 msg.what=0;
                 mainActivity.mHandler.sendMessage(msg);
+
             }
         });
-
+        editText.addTextChangedListener(new WatcherListener(getActivity(),sure_Upload));
 
     }
     public void setbitmap(String file)

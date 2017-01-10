@@ -1,5 +1,6 @@
 package com.example.zqq.myapplication.Third_class;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.example.zqq.myapplication.Adapters.Mine_Recycler_Adapter;
+import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.R;
 import com.example.zqq.myapplication.Users.User;
 
@@ -54,18 +56,32 @@ public class Follow_ extends AppCompatActivity {
         loadData();
 
     }
-
-
     private void loadData()
     {
-
-            HashMap<String,Object> map=new HashMap<>();
-            map.put("layout",3);
+        User user=new User();
+        if (user.id!=null) {
+          if (user.Follows!=null)
+          {
+              for (int i = 0; i < user.Follows.size(); i++) {
+                  maps.clear();
+                  maps.addAll(user.Follows);
+              }
+          }else
+          {
+              HashMap<String, Object> map = new HashMap<>();
+              map.put("layout", 3);
+              map.put("context", Follow_.this);
+              map.put("text", "目前没有任何关注哦");
+              maps.add(map);
+          }
+        }else
+        {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("layout", 3);
             map.put("context", Follow_.this);
-        map.put("text","目前没有任何关注哦");
+            map.put("text", "目前没有任何关注哦");
             maps.add(map);
-            mAdapter.notifyDataSetChanged();
-
+        }
 
             mAdapter.notifyDataSetChanged();
 
@@ -73,8 +89,10 @@ public class Follow_ extends AppCompatActivity {
 
         }
 
+
     public void Followback(View view)
     {
         onBackPressed();
     }
+
 }

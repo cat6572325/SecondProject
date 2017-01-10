@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
@@ -37,8 +38,12 @@ public class Fragment_Second  extends Fragment {
         }
     };
     private View v;
-    //第三方刷新控件
+
+    public static ArrayList<String> urls=new ArrayList<>();
+    //截图，头像等图片的url集合
+
     public WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
+    //第三方刷新控件
     Get_Http_AsycTask get_http_asycTask=new Get_Http_AsycTask();
 
     @Override

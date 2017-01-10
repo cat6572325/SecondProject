@@ -19,6 +19,7 @@ import com.example.zqq.myapplication.R;
 import com.example.zqq.myapplication.Users.User;
 import com.example.zqq.myapplication.classify_Fragments.Fragment_First;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -38,7 +39,27 @@ public class Like_ extends AppCompatActivity {
             JSONObject JS = null;
             switch (msg.what) {
                 case 0:
-                    Log.e("likes",msg.obj.toString());
+                    Log.e("likes", msg.obj.toString());
+                    try {
+                        JS = new JSONObject((String) msg.obj);
+
+                    for (int i = 0; i < JS.optJSONArray("favorites").length(); i++) {
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("layout", 2);
+                        map.put("context", Like_.this);
+                        maps.add(map);
+                    }
+                    if (maps != null) {
+                        User user = new User();
+                        if (user.Likes==null)
+                            user.Likes=new ArrayList<>();
+                        user.Likes.clear();
+                        user.Likes.addAll(maps);
+                        loadData();
+                    }
+                    } catch (JSONException e) {
+                e.printStackTrace();
+            }
                     break;
             }
         }
@@ -57,11 +78,10 @@ public class Like_ extends AppCompatActivity {
         initView();
     }
 
-    private void initView()
-    {
+    private void initView() {
 
-        History_RecyclerView=(RecyclerView)this.findViewById(R.id.History_recyclerView);
-        mAdapter = new Mine_Recycler_Adapter( maps);
+        History_RecyclerView = (RecyclerView) this.findViewById(R.id.History_recyclerView);
+        mAdapter = new Mine_Recycler_Adapter(maps);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(Like_.this, 1);
 
         History_RecyclerView.setLayoutManager(gridLayoutManager);
@@ -70,6 +90,7 @@ public class Like_ extends AppCompatActivity {
         //条目点击事件
         mAdapter.setOnClickListener(new Mine_Recycler_Adapter.OnItemClickListener() {
             @Override
+
             public void onItemClickListener(View view, int position) {
 
 
@@ -80,62 +101,84 @@ public class Like_ extends AppCompatActivity {
 
             }
         });
-
-        //loadData();
+        User user=new User();
+        if (user.nickname!=null)
+        loadData();
     }
 
 
-    private void loadData()
-    {
-        User user=new User();
-        if (user.Likes==null) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("handler",mHandler);
-            map.put("what",0);
-            map.put("context", Like_.this);
-            new MyAsyncTask(map).execute("http://copytp.herokuapp.com/user/favorite/get?&token=" + user.token);
-        }else {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("layout", 3);
-            map.put("context", Like_.this);
-            map.put("text", "目前没有任何粉丝哦");
-            map.put("button", "0");
-            maps.add(map);
+    private void loadData() {
+        User user = new User();
+        if (user.nickname!=null) {
+            if (user.Likes == null) {
+
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("handler", mHandler);
+                map.put("what", 0);
+                map.put("context", Like_.this);
+                new MyAsyncTask(map).execute("http://tp.newteo.com/user/favorite/get?&token=" + user.token);
+
+            } else {
+                maps.clear();
+                for (int i = 0; i < user.Likes.size(); i++) {
+                    HashMap<String, Object> map = user.Likes.get(i);
+                    map.put("context",Like_.this);
+                    map.put("layout",2);
+                    maps.add(map);
+                }
+                if (maps.size() < 1) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("layout", 3);
+                    map.put("context", Like_.this);
+                    map.put("text", "目前没有任何粉丝哦");
+                    map.put("button", "0");
+                    maps.add(map);
+                }
+            }
+        }else
+        {
+            if (maps.size() < 1) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("layout", 3);
+                map.put("context", Like_.this);
+                map.put("text", "目前没有任何粉丝哦");
+                map.put("button", "0");
+                maps.add(map);
+            }
         }
         mAdapter.notifyDataSetChanged();
 
 
-
-
     }
-    public void back(View view)
-    {
+
+    public void Like_back(View view) {
         onBackPressed();
     }
 
     private class MyAsyncTask extends AsyncTask<String, Void, String[]> {
-        HashMap<String ,Object> map;
+        HashMap<String, Object> map;
 
-        public MyAsyncTask(HashMap<String,Object> map)
-        {
-            this.map=map;
+        public MyAsyncTask(HashMap<String, Object> map) {
+            this.map = map;
         }
+
         @Override
         protected String[] doInBackground(String... params) {
 
 
-            Get_Http_AsycTask get_http_asycTask=new Get_Http_AsycTask();
-            get_http_asycTask.gethttp(params[0],map);
+            Get_Http_AsycTask get_http_asycTask = new Get_Http_AsycTask();
+            get_http_asycTask.gethttp(params[0], map);
             return new String[0];
         }
 
-        @Override protected void onPostExecute(String[] result) {
+        @Override
+        protected void onPostExecute(String[] result) {
 
             super.onPostExecute(result);
         }
     }
-    private void checkLike()
-    {
+
+    private void checkLike() {
 
     }
 }

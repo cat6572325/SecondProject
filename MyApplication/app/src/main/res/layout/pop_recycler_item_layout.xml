@@ -11,15 +11,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="#ffffff"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="5dp">
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp">
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/popupwind_recyclerView_item_t"
     android:clickable="false"
     android:focusable="false"
-    android:layout_margin="7dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:textSize="13sp"
     android:text="第一个"
     />

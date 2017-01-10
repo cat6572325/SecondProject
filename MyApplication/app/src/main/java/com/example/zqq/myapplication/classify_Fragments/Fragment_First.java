@@ -1,8 +1,12 @@
 package com.example.zqq.myapplication.classify_Fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +28,7 @@ import android.widget.ActionMenuView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -32,13 +37,16 @@ import android.widget.Toast;
 import com.example.zqq.myapplication.Adapters.Second_Adapter;
 import com.example.zqq.myapplication.Home_Fragment;
 import com.example.zqq.myapplication.Llisteners.SampleListener;
+import com.example.zqq.myapplication.MainActivity;
 import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
+import com.example.zqq.myapplication.NetWorks.Post_Http;
 import com.example.zqq.myapplication.R;
 import com.example.zqq.myapplication.Users.User;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.ListVideoUtil;
+import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,8 +54,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import okhttp3.FormBody;
 
 /**
  * Created by zqq on 16-12-27.
@@ -59,6 +71,8 @@ public class Fragment_First extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             JSONArray jsonArray;
+            Bundle bundle=msg.getData();
+
             JSONObject jsonObject,jsonObject1,jsonObject2,jsonObject3,jsonObject4;
             switch (msg.what) {
                 case 0:
@@ -107,16 +121,16 @@ public class Fragment_First extends Fragment {
                                 //   jsonObject2=jsonObject.getJSONObject("poster");
                                 jsonObject3 = jsonObject.getJSONObject("cover");
 
-
                                 HashMap<String, Object> map = new HashMap<>();
                                 map.put("vid_url", jsonObject1.getString("vid_url"));
                                 map.put("title", "FirstVideos");
                                 map.put("layout", 0);
+                                map.put("_id",jsonObject.optString("_id"));
                                 map.put("nickname", jsonObject.getString("title"));
                                 map.put("comment_number", jsonObject.getString("comment_number"));
                                 map.put("like_number", jsonObject.getString("like_number"));
                                 map.put("view_number", jsonObject.getString("view_number"));
-
+                                map.put("head_pic",jsonObject.optString("head_pic","null"));
                                 map.put("tag", String.valueOf(System.currentTimeMillis()));
                                 if (user.all_video==null) {
                                     user.all_video = new ArrayList<>();
@@ -152,24 +166,61 @@ public class Fragment_First extends Fragment {
                     map.put("view_number","null");
                     map.put("like_number","null");
                     map.put("nickname","null");
+                    map.put("head_pic","null");
                     map.put("tag",String.valueOf(System.currentTimeMillis()));
                  ArrayList<HashMap<String,Object>> maps=new ArrayList<>();
                     maps.add(map);
-
             AddData(maps);
 
             break;
+                case 2:
+                    //添加&删除喜欢
+                   //if (bundle.getString("?").equals("成功")) {
+                       User user=new User();
+                       if (user.favorites==null)
+
+                           user.favorites=new ArrayList<>();
+
+                           jsonObject=(JSONObject)msg.obj;
+                           jsonArray=jsonObject.optJSONArray("favorites");
+                           Log.e("j",jsonArray.toString());
+                       user=new User();
+                           for (int i = 0; i <jsonArray.length() ; i++) {
+                               try {
+                                   for (int y = 0; y < user.all_video.size(); y++) {
+                                       if (jsonArray.getString(i).equals(user.all_video.get(y).get("_id").toString()))
+                                       {
+                                           if (user.Likes==null)
+                                               user.Likes=new ArrayList<>();
+
+                                           user.Likes.add(user.all_video.get(y));
+                                       }
+                                   }
+                               } catch (JSONException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                      Log.e("添加喜欢",jsonObject.toString());
+
+                  // }
+
+
+                    break;
+                case 3:
+                    //加载图片
+                    break;
             }
         }
     };
     PopupWindow mPopWindow;
     int countItems=1;//定义全局的每次刷新将获得多少个视频
-
+    private Set<MyAsycTask> AsyncTasks;
     int lastVisibleItem;
     int firstVisibleItem;
     LinearLayoutManager linearLayoutManager;
     RecyclerView home_rec;
     View v;
+    public static ArrayList<String> urls=new ArrayList<>();//截图，头像等图片的url集合
     public ArrayList<HashMap<String, Object>> lists = new ArrayList<HashMap<String, Object>>(), lists2 = new ArrayList<HashMap<String, Object>>();
     private Second_Adapter second_adapter;
     //第三方刷新控件
@@ -213,22 +264,64 @@ public class Fragment_First extends Fragment {
         home_rec.setLayoutManager(gridLayoutManager);
         home_rec.setAdapter(second_adapter);
         //条目点击事件
+        if (isNetworkAvailable(getActivity()))
+        {
+            Toast.makeText(getContext(), "当前有可用网络！", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(getContext(), "当前没有可用网络！", Toast.LENGTH_LONG).show();
+        }
+
 
         second_adapter.setOnClickListener(new Second_Adapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(View view, int position) {
                 Toast.makeText(getActivity(), position + "========Click:", Toast.LENGTH_SHORT).show();
+
+
             }
             @Override
             public void onItemLongClickListener(View view, int position) {
+            }
+        });
+        second_adapter.setOnLikeListener(new Second_Adapter.OnLikeClickListener() {
+            @Override
+            public void OnLikeClickListener(View view, int position) {
+                //添加至我喜欢的&删除这个我喜欢的
+                User user=new User();
+                if (user.id!=null) {
+                    okhttp3.RequestBody formBody = new FormBody.Builder()
+                            .build();
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("handler", mHandler);
+                    map.put("what", 2);
+                    map.put("vid", lists.get(position).get("_id"));
+                    map.put("context", getContext());
+                    map.put("body", formBody);
+                    map.put("method", "post");
+                    addOrclerLike(map);
+                    ImageView img_like=(ImageView)view.findViewById(R.id.like_img);
+                    if (img_like.getTag().equals("没有点过"))
+                    {
+                        img_like.setImageResource(R.mipmap.likes_red);
+                        img_like.setTag("点过");
+                    }else
+                    {
+                        img_like.setImageResource(R.mipmap.likes);
+                        img_like.setTag("没有点过");
+                    }
+                }else
+                {
+                    Toast.makeText(getContext(),"未登录",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                new Task().execute();
+             getVideos();
 
             }
         });
@@ -246,7 +339,8 @@ public class Fragment_First extends Fragment {
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 Debuger.printfLog("firstVisibleItem " + firstVisibleItem +" lastVisibleItem " + lastVisibleItem);
                 //大于0说明有播放,//对应的播放列表TAG
-                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(RecyclerItemViewHolder.TAG)*/) {
+                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(RecyclerItemViewHolder.TAG)*/)
+                {
                     //当前播放的位置
                     int position = listVideoUtil.getPlayPosition();
                     //不可视的是时候
@@ -257,12 +351,29 @@ public class Fragment_First extends Fragment {
                             int size = CommonUtil.dip2px(getActivity(), 150);
                             //actionbar为true才不会掉下面去
                             listVideoUtil.showSmallVideo(new Point(size, size), true, true);
+
                         }
                     } else {
                         if (listVideoUtil.isSmall()) {
                             listVideoUtil.smallVideoToNormal();
                         }
                     }
+                }else
+                {
+                    User user=new User();//假如这样频繁的申明和消除实例会给系统造成负担，就得换一种方式了
+                    if (user.get_http==null) {
+                        user.get_http = new Get_Http_AsycTask();
+                        user.get_http.initlrucache();
+                    }
+                        HashMap<String,Object> map=new HashMap<String, Object>();
+                        map.put("?","Fragment_First");
+                        map.put("recyclerview",home_rec);
+                    map.put("handler",mHandler);
+                        user.get_http.loadurl(
+                                linearLayoutManager.findFirstVisibleItemPosition()
+                                , linearLayoutManager.findLastVisibleItemPosition()
+                                , map);
+
                 }
             }
         });
@@ -278,11 +389,14 @@ public class Fragment_First extends Fragment {
             @Override
             public void onQuitSmallWidget(String url, Object... objects) {
                 super.onQuitSmallWidget(url, objects);
+                linearLayoutManager = (LinearLayoutManager) home_rec.getLayoutManager();
+
                 //大于0说明有播放,//对应的播放列表TAG
-                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(ListVideoAdapter.TAG)*/) {
+                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(ListVideoAdapter.TAG)*/)
+                {
                     //当前播放的位置
                     int position = listVideoUtil.getPlayPosition();
-                    //不可视的是时候
+                    //不可视的时候
                     if ((position < firstVisibleItem || position > lastVisibleItem)) {
                         //释放掉视频
                         listVideoUtil.releaseVideoPlayer();
@@ -290,22 +404,44 @@ public class Fragment_First extends Fragment {
                     }
                 }
 
+
             }
         });
 
     }
-        private class Task extends AsyncTask<Void, Void, String[]> {
-               @Override
-            protected String[] doInBackground(Void... params) {
-                return new String[0];
-            }
 
-            @Override protected void onPostExecute(String[] result) {
-                // Call setRefreshing(false) when the list has been refreshed.
-                   getVideos();
-                super.onPostExecute(result);
+    public boolean isNetworkAvailable(Activity activity)
+    {
+        Context context = activity.getApplicationContext();
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null)
+        {
+            return false;
+        }
+        else
+        {
+            // 获取NetworkInfo对象
+            NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
+
+            if (networkInfo != null && networkInfo.length > 0)
+            {
+                for (int i = 0; i < networkInfo.length; i++)
+                {
+                    System.out.println(i + "===状态===" + networkInfo[i].getState());
+                    System.out.println(i + "===类型===" + networkInfo[i].getTypeName());
+                    // 判断当前网络状态是否为连接状态
+                    if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+                }
             }
         }
+        return false;
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -315,41 +451,85 @@ public class Fragment_First extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        AsyncTasks=new HashSet<>();
+        if (lists.size()<2)
         getVideos();
 
+
+
     }
+
 
     public void deleteItem(int position)
     {//用于试用操作链表的临时方法
         second_adapter.notifyItemRemoved(position);
+    }
+    public void addOrclerLike(final HashMap<String,Object> map)
+    {//TODO 添加一个喜欢&删除一个喜欢
+        User user=new User();
+        if (AsyncTasks!=null)
+            for (MyAsycTask mTask : AsyncTasks)
+            {//取消所有正在进行的异步
+                mTask.cancel(false);
+            }
+
+        MyAsycTask myAsycTask=new MyAsycTask(map);
+       AsyncTasks.add(myAsycTask);
+        myAsycTask.execute("http://tp.newteo.com/user/favorite?vid="
+                +map.get("vid").toString()+"&token="+user.token);
+
     }
     public void getVideos()
     {//TODO 调用Asynstask启动线程加载数据
         HashMap<String,Object> map=new HashMap<>();
         map.put("handler",mHandler);
         map.put("context",getContext());
+        map.put("method","get");
         map.put("what",0);
+        if (AsyncTasks!=null)
+        for (MyAsycTask mTask : AsyncTasks)
+        {//取消所有正在进行的异步
+            mTask.cancel(false);
+        }
         MyAsycTask myAsycTask=new MyAsycTask(map);
      int total=second_adapter.getItemCount()/5;
         //通过总数处以6来获得应该从哪一页开始获取视频
         Log.e("获取第",""+total+"页,"+countItems+"个视频");
+        AsyncTasks.add(myAsycTask);
+        myAsycTask.execute("http://tp.newteo.com/video/?per=3&page=1");//获取最多点击数的三个视频
 
-        myAsycTask.execute("http://copytp.herokuapp.com/video/?per=5&page="+countItems);//+"&page="+(total+1));
         //启动线程联网后就返回
         countItems++;
     }
 
+    private void getmustnewvideo()
+    {
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("handler",mHandler);
+        map.put("context",getContext());
+        map.put("method","get");
+        map.put("what",0);
+        if (AsyncTasks!=null)
+            for (MyAsycTask mTask : AsyncTasks)
+            {//取消所有正在进行的异步
+                mTask.cancel(false);
+            }
+        MyAsycTask myAsycTask=new MyAsycTask(map);
+        AsyncTasks.add(myAsycTask);
+        myAsycTask.execute("http://tp.newteo.com/video/sort/new?channel="+"=5&page="+countItems);//获取最多点击数的三个视频
+
+    }
     public void AddData(ArrayList<HashMap<String,Object>> Datalist)
     {
 
       //  HashMap<String ,Object> map=new HashMap<>();
        // map.put("title",Datalist.get(0).get("title").toString());
        // lists.add(map);
-
         for (int i = 0; i <Datalist.size() ; i++) {
             Log.e("DatalistSize",":"+Datalist.size());
             //将视频条目添加到集合类
             Datalist.get(i).put("VideoList",listVideoUtil);
+            if (lists.size()!=2)//上传视频后会马上清空lists然后事先加上
             lists.clear();
             HashMap<String,Object> map1=new HashMap<>();
             map1.put("layout",1);
@@ -364,6 +544,35 @@ public class Fragment_First extends Fragment {
         }
         second_adapter.notifyDataSetChanged();
     }
+
+    public void AddoneData(final HashMap<String,Object> map1)
+    {
+
+        HashMap<String,Object> map=new HashMap<>();
+        User user=new User();
+
+        map.put("vid_url", map1.get("path"));
+        map.put("title", "FirstVideos");
+        map.put("layout", 0);
+
+        map.put("nickname", map1.get("title"));
+        map.put("comment_number", 0);
+        map.put("like_number", 0);
+        map.put("view_number", 0);
+        map.put("head_pic","null");
+        map.put("tag", String.valueOf(System.currentTimeMillis()));
+      //  mList.add(2,"插入");
+        lists.add(3,map);
+        second_adapter.notifyItemInserted(3);
+        second_adapter.notifyItemRangeChanged(2,lists.size()-3);
+        user.wait_UpLoad.clear();
+        user.wait_UpLoad=null;
+    }
+    public void getnewlist()
+    {
+
+    }
+
     class MyAsycTask extends AsyncTask<String,Void,String>
     {//TODO 异步
          HashMap<String,Object> map;
@@ -375,9 +584,18 @@ public class Fragment_First extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            get_http_asycTask=new Get_Http_AsycTask();
-            get_http_asycTask.gethttp(params[0],map);//get方法链接http
+            if (map.get("method").toString().equals("get")) {
+                get_http_asycTask = new Get_Http_AsycTask();
+                get_http_asycTask.gethttp(params[0], map);//get方法链接http
+            }
+            if (map.get("method").toString().equals("post"))
+            {
+                Post_Http post_http=new Post_Http(map);
+                post_http.Post_Http(params[0],(okhttp3.RequestBody) map.get("body"));
+            }
             return null;
+
+
         }
 
         @Override

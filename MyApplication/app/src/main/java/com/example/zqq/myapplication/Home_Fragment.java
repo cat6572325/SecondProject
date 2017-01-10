@@ -212,8 +212,7 @@ public void addview(View view)
                 , true);//不知道
         mPopWindow.setContentView(contentView);
         //设置各个控件的点击响应
-        btntest=(Button)contentView.findViewById(R.id.testutton);
-     //   btntest.setOnClickListener(this);
+      //   btntest.setOnClickListener(this);
       //  TextView tv1 = (TextView)contentView.findViewById(R.id.pop_computer);
       //  TextView tv2 = (TextView)contentView.findViewById(R.id.pop_financial);
       //  TextView tv3 = (TextView)contentView.findViewById(R.id.pop_manage);
@@ -232,23 +231,11 @@ public void addview(View view)
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
-            case R.id.testutton:{
-                Toast.makeText(getContext(),"你点击了一个按钮，添加了一个视频,那么，再见",Toast.LENGTH_SHORT).show();
-                ArrayList<HashMap<String,Object>> Datalist=new ArrayList<>();
-                HashMap<String ,Object> map=new HashMap<>();
-                map.put("title","FirstVideos");
-                map.put("layout",0);
-                map.put("tag",String.valueOf(System.currentTimeMillis()));
-                Datalist.add(map);
-                fragment_first.AddData(Datalist);
-                mPopWindow.dismiss();
-            }
-            break;
-
-        }
     }
-
+public void ShowAdd(final HashMap<String,Object> map)
+{
+    fragment_first.AddoneData(map);
+}
     public void getVideos() {
        // fragment_first.mWaveSwipeRefreshLayout.setRefreshing(true);
         fragment_first.getVideos();

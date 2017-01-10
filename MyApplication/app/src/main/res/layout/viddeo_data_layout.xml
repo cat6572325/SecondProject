@@ -38,6 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:clickable="false"
+        android:focusable="false"
 android:layout_margin="10dp"
         android:id="@+id/sure_Upload"
         android:background="@mipmap/button"
@@ -60,7 +62,7 @@ android:layout_margin="10dp"
             android:layout_width="139dp"
             android:layout_height="67dp"
             android:id="@+id/video_edit_img"
-            android:background="@mipmap/ic_launcher"/>
+            android:background="@drawable/b"/>
             <ImageView
             android:layout_width="139dp"
             android:layout_height="20dp"
@@ -116,14 +118,14 @@ android:layout_margin="10dp"
         android:background="#ffffff"
         android:text="热门"
         android:layout_weight="1"
-
+        android:onClick="applications"
         />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:text="爆笑"
-
+            android:onClick="applications"
             android:layout_weight="1"
 
             />
@@ -132,7 +134,7 @@ android:layout_margin="10dp"
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:text="猎奇"
-
+            android:onClick="applications"
             android:layout_weight="1"
             />
         <Button
@@ -140,7 +142,7 @@ android:layout_margin="10dp"
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:text="娱乐"
-
+            android:onClick="applications"
             android:layout_weight="1"
             />
         </LinearLayout>
@@ -153,14 +155,14 @@ android:layout_margin="10dp"
                 android:background="#ffffff"
                 android:text="网红"
                 android:layout_weight="1"
-
+                android:onClick="applications"
                 />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:text="社会"
-
+                android:onClick="applications"
                 android:layout_weight="1"
 
                 />
@@ -169,7 +171,7 @@ android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:text="影音"
-
+                android:onClick="applications"
                 android:layout_weight="1"
                 />
             <Button
@@ -177,7 +179,7 @@ android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:text="音乐"
-
+                android:onClick="applications"
                 android:layout_weight="1"
                 />
         </LinearLayout>
@@ -190,14 +192,14 @@ android:layout_margin="10dp"
                 android:background="#ffffff"
                 android:text="动漫"
                 android:layout_weight="1"
-
+                android:onClick="applications"
                 />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:text="萌宠"
-
+                android:onClick="applications"
                 android:layout_weight="1"
 
                 />
@@ -206,7 +208,7 @@ android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:text="语音"
-
+                android:onClick="applications"
                 android:layout_weight="1"
                 />
             <Button
@@ -214,7 +216,7 @@ android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:text="专题"
-
+                android:onClick="applications"
                 android:layout_weight="1"
                 />
         </LinearLayout>
@@ -236,23 +238,23 @@ android:layout_margin="10dp"
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
+android:layout_weight="1"
                 >
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="43dp"
+                android:layout_height="43dp"
                 android:layout_margin="10dp"
                 android:background="@mipmap/moments"
                 />
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="43dp"
+                android:layout_height="43dp"
                 android:layout_margin="10dp"
                 android:background="@mipmap/weibo"
                 />
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="43dp"
+                android:layout_height="43dp"
                 android:layout_margin="10dp"
                 android:background="@mipmap/qzone"
                 />
@@ -262,6 +264,7 @@ android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
+            android:layout_weight="1"
             />
     </LinearLayout>
 

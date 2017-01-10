@@ -29,7 +29,9 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
             ,R.layout.history_recyclerview_item_layout
             ,R.layout.nothing_item_layout
             ,R.layout.nothink_item_ready
-    ,R.layout.nothink_item_white};
+    ,R.layout.nothink_item_white
+    ,R.layout.follow_item_layout
+    };
     public Mine_Recycler_Adapter(ArrayList<HashMap<String,Object>> maps)
     {
         this.maps=maps;
@@ -67,6 +69,7 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
             case 0:
                 //TODO 我的信息面板
                 holder.title.setText(maps.get(position).get("title").toString());
+                if (maps.get(position).containsKey("icon_id"))
                 holder.item_icon.setBackgroundResource((int)maps.get(position).get("icon_id"));
 
                 if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
@@ -119,6 +122,10 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
             case 3:
                 //无内容item
                 holder.nothink_item_t.setText(maps.get(position).get("text").toString());
+                break;
+            case 4:
+                //我喜欢的
+
                 break;
         }
 

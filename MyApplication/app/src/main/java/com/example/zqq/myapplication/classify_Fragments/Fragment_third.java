@@ -8,11 +8,15 @@ import android.view.ViewGroup;
 
 import com.example.zqq.myapplication.R;
 
+import java.util.ArrayList;
+
 /**
  * Created by zqq on 16-12-27.
  */
 public class Fragment_third  extends Fragment {
     private View v;
+
+    public static ArrayList<String> urls=new ArrayList<>();//截图，头像等图片的url集合
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

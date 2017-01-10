@@ -1,9 +1,9 @@
 package com.example.zqq.myapplication;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +32,7 @@ import okhttp3.RequestBody;
 
 public class History_ extends AppCompatActivity {
     RecyclerView History_RecyclerView;
-   public AlertDialog.Builder dialog = null;
+   private AlertDialog dialog = null;
 
     public ArrayList<HashMap<String, Object>> maps = new ArrayList<HashMap<String, Object>>();
     private Mine_Recycler_Adapter mAdapter;
@@ -98,7 +98,7 @@ public class History_ extends AppCompatActivity {
     {
         onBackPressed();
     }
-    private void HistoryClear()
+    public void HistoryClear()
     {
         User.historys.clear();
         maps.clear();
@@ -106,26 +106,25 @@ public class History_ extends AppCompatActivity {
     }
     public void clerAll(View view)
     {
-        LayoutInflater inflater = getLayoutInflater();
-        final View layout = inflater.inflate(R.layout.history_delete_dialog,
-                (ViewGroup) findViewById(R.id.dialog));
         Button sure,cancel;
-        dialog = new AlertDialog.Builder(this).setView(layout);
-
-        sure=(Button)view.findViewById(R.id.sure);
-        cancel=(Button)view.findViewById(R.id.cancel);
-        sure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HistoryClear();
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        dialog.show();
+        User user=new User();
+        if (user.historys!=null) {
+            dialog = new AlertDialog.Builder(History_.this).create();
+            dialog.show();
+            dialog.getWindow().setContentView(R.layout.history_delete_dialog);
+            dialog.getWindow()
+                    .findViewById(R.id.sure)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            HistoryClear();
+                            dialog.dismiss();
+                        }
+                    });
+        }else
+        {
+            Toast.makeText(History_.this,"没有任何可清除的",Toast.LENGTH_SHORT).show();
+        }
     }
+
 }

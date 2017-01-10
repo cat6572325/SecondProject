@@ -27,15 +27,20 @@
 
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="47dp"
     android:layout_alignParentBottom="true"
     android:id="@+id/framelayout_above_layout"
     >
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/head_img"
-        android:layout_margin="10px"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shadow_line"
+        />
+    <com.example.zqq.myapplication.Customs.Custom_shape_img
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:id="@+id/head_img1"
         android:background="@mipmap/oval_7"
         />
      <TextView
@@ -44,8 +49,10 @@
          android:layout_centerVertical="true"
          android:layout_margin="10px"
          android:id="@+id/nickname"
-         android:layout_toRightOf="@id/head_img"
+         android:layout_toRightOf="@id/head_img1"
          android:text="000"
+         android:textSize="18sp"
+         android:textColor="#ffffff"
             />
     <TextView
         android:layout_width="wrap_content"
@@ -53,6 +60,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:id="@+id/time_icon_txt"
+        android:textSize="16sp"
+        android:textColor="#ffffff"
         android:text="10:00"/>
     <ImageView
         android:layout_width="wrap_content"
@@ -74,8 +83,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="标题"
-
-        android:gravity="center_horizontal|center_vertical"
+        android:textColor="#000000"
+        android:id="@+id/title_home"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="5dp"
         android:textSize="16sp"
         android:layout_weight="1"
         />
@@ -88,14 +99,15 @@
         >
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_weight="1"
             >
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10px"
+android:layout_weight="1"
 
                 android:minWidth="20dp"
                 android:minHeight="30dp"
@@ -104,6 +116,7 @@
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:background="@mipmap/watched_icon"
             />
         <TextView
@@ -111,7 +124,10 @@
             android:layout_height="wrap_content"
             android:text="1000"
             android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="#000000"
             android:id="@+id/plays_t"
+            android:textSize="16sp"
             />
                 </LinearLayout>
         </LinearLayout>
@@ -119,14 +135,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="right"
+            android:gravity="right|center_vertical"
+            android:clickable="true"
+            android:focusable="true"
+
+
             android:orientation="horizontal"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10px"
-
+                android:id="@+id/like_l"
+                android:onClick="true"
+                android:focusable="true"
                 android:minWidth="20dp"
                 android:minHeight="30dp"
                 >
@@ -134,26 +156,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@mipmap/likes"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/like_img"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10px"
                 android:id="@+id/likes_t"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
                 android:text="300"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10px"
-
+                android:id="@+id/comment_l"
                 android:minWidth="20dp"
+                android:layout_gravity="center_vertical"
                 android:minHeight="30dp"
                 >
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+android:layout_gravity="center_vertical"
                 android:background="@mipmap/commemt_icon"
                 />
             <TextView
@@ -161,6 +189,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10px"
                 android:id="@+id/comments_t"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
+                android:textColor="#000000"
                 android:text="30"/>
             </LinearLayout>
             <LinearLayout
@@ -176,6 +207,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:background="@mipmap/more_icon"
                 />
             </LinearLayout>
