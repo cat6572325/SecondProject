@@ -1,86 +1,54 @@
 package com.example.zqq.myapplication;
 
 import android.annotation.TargetApi;
-import android.app.*;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.*;
-import android.hardware.*;
-import android.hardware.Camera.Size;
-import android.media.*;
-import android.media.MediaRecorder.*;
-import android.media.audiofx.EnvironmentalReverb;
-import android.os.*;
-
-import android.provider.MediaStore;
-import android.support.v4.app.*;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v7.app.*;
-import android.support.v7.app.AlertDialog;
-import android.system.ErrnoException;
-import android.text.Layout;
-import android.util.DisplayMetrics;
-
-import android.util.Log;
-import android.util.TimeUtils;
-import android.view.*;
-import android.view.View.*;
-import android.webkit.WebView;
-import android.widget.*;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.security.Policy;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
+import android.graphics.Bitmap;
 import android.hardware.Camera;
-import android.support.design.widget.*;
-
-import com.example.zqq.myapplication.FileUtils.File_with_;
-import com.example.zqq.myapplication.NetWorks.Post_Http;
-import com.example.zqq.myapplication.Users.User;
-import com.example.zqq.myapplication.Utils.CameraUtils;
-import com.okhttplib.HttpInfo;
-import com.okhttplib.OkHttpUtil;
-import com.okhttplib.OkHttpUtilInterface;
-import com.okhttplib.annotation.CacheLevel;
-import com.okhttplib.callback.ProgressCallback;
-
-import java.io.IOException;
-import java.util.List;
-
-
-import android.app.Activity;
-import android.content.Context;
-
-import android.graphics.PixelFormat;
-import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.Size;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaCodec;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaMuxer;
 import android.media.MediaRecorder;
+import android.media.ThumbnailUtils;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
-import android.view.Display;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.SurfaceHolder.Callback;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.zqq.myapplication.FileUtils.File_with_;
+import com.example.zqq.myapplication.Users.User;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOError;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class Round_Video_ extends FragmentActivity implements SurfaceHolder.Callback
 
@@ -147,12 +115,12 @@ public class Round_Video_ extends FragmentActivity implements SurfaceHolder.Call
     int count = 0;
     Timer mTimer = new Timer();
     TimeUnit t;
-    File file = new File("/sdcard/RoundVideo/RoudVideos" + randomProdoction() + ".mp4");
+    File file = new File("/sdcard/RoundVideo/RoudVideos" + randomProdoction() + ".3gp");
     File_with_ file_with;
     String COMMA_PATTERN = ",";
     TextView top_time,timer_flag;
     int minute, min;
-    Size size;
+    Camera.Size size;
     task Prog_task;
     ImageView sound, turnC, round_back_img, rounding_time_img, round_delete, round_upload, round_edit;
     AlertDialog.Builder waitdialog;
@@ -379,7 +347,7 @@ public class Round_Video_ extends FragmentActivity implements SurfaceHolder.Call
             if (turncamera == 0) {
                 camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
             } else {
-                camera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
             }
             //  camera.setPreviewDisplay(mSurfaceView.getHolder());
 
@@ -391,23 +359,21 @@ public class Round_Video_ extends FragmentActivity implements SurfaceHolder.Call
             // camera.startPreview();
             mediaRecorder.setCamera(camera);
             // 设置录制视频源为Camera(相机)
-
             //等于0则设置录音
             mediaRecorder.setVideoSource(Camera.CameraInfo.CAMERA_FACING_BACK);
             //设置音频采集方式
-            mediaRecorder.setAudioSource(AudioSource.MIC);
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             //设置输出格式
-            mediaRecorder.setOutputFormat(OutputFormat.MPEG_4);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             //设置audio编码方式
-
             mediaRecorder.setOrientationHint(90);
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             //设置最大限时
             //mediaRecorder.setMaxDuration(60*1000);
             //录像旋转90度
             //mediaRecorder.setOrientationHint(90);
             // 设置录制完成后视频的封装格式THREE_GPP为3gp.MPEG_4为mp4
-            //mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+           // mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             // 设置录制的视频编码h263 h264
             mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             //设置高质量录制,改变码率
@@ -420,7 +386,7 @@ public class Round_Video_ extends FragmentActivity implements SurfaceHolder.Call
             mediaRecorder.setOutputFile(file_with.TestFile(file).getPath());
             // 设置捕获视频图像的预览界面
             mediaRecorder.setPreviewDisplay(mSurfaceView.getHolder().getSurface());
-            mediaRecorder.setOnErrorListener(new OnErrorListener() {
+            mediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
                 @Override
                 public void onError(MediaRecorder mr, int what, int extra) {
                     // 发生错误，停止录制
@@ -495,7 +461,7 @@ public class Round_Video_ extends FragmentActivity implements SurfaceHolder.Call
             if (turncamera == 0) {
                 camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
             } else {
-                camera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
             }
             //  camera.setPreviewDisplay(mSurfaceView.getHolder());
 
@@ -569,7 +535,7 @@ public class Round_Video_ extends FragmentActivity implements SurfaceHolder.Call
      * @return 得到与原宽高比例最接近的尺寸
      */
     protected Camera.Size getCloselyPreSize(int surfaceWidth, int surfaceHeight,
-                                            List<Size> preSizeList) {
+                                            List<Camera.Size> preSizeList) {
 
         int ReqTmpWidth;
         int ReqTmpHeight;

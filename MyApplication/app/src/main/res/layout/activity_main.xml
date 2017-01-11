@@ -295,13 +295,13 @@
                 <ImageView
                     android:layout_width="139dp"
                     android:layout_height="67dp"
-                    android:background="@mipmap/ic_launcher"
+                    android:background="@drawable/b"
                     />
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@drawable/shadow_line"
+                    android:background="@drawable/a"
                     />
                 <TextView
                 android:id="@+id/upload_video_time"

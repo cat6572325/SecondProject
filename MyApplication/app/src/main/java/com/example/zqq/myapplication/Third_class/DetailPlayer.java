@@ -1,16 +1,21 @@
 package com.example.zqq.myapplication.Third_class;
 
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.example.zqq.myapplication.Llisteners.SampleListener;
 import com.example.zqq.myapplication.R;
+import com.example.zqq.myapplication.Users.User;
+import com.example.zqq.myapplication.Utils.LandLayoutVideo;
 import com.shuyu.gsyvideoplayer.GSYPreViewManager;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 
@@ -36,27 +41,30 @@ public class DetailPlayer extends AppCompatActivity {
 
     private boolean isPlay;
     private boolean isPause;
-
+    User user;
     private OrientationUtils orientationUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_player);
+        setContentView(R.layout.play_video_);
        // ButterKnife.bind(this);
-
-        String url = "http://baobab.wdjcdn.com/14564977406580.mp4";
+        detailPlayer= (LandLayoutVideo) findViewById(R.id.detail_player);
+        postDetailNestedScroll= (NestedScrollView) findViewById(R.id.post_detail_nested_scroll);
+        Intent getIntent = getIntent();
+       String position = getIntent.getStringExtra("videoposition");
+        user=new User();
+        String url = user.all_video.get(Integer.parseInt(position)).get("vid_url").toString();
+        // "http://baobab.wdjcdn.com/14564977406580.mp4";
         //String url = "https://d131x7vzzf85jg.cloudfront.net/upload/documents/paper/b2/61/00/00/20160420_115018_b544.mp4";
-        detailPlayer.setUp(url, true, null, "测试视频");
-
+        detailPlayer.setUp(url, true, null, user.all_video.get(Integer.parseInt(position)).get("title").toString());
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setImageResource(R.mipmap.xxx1);
+        imageView.setImageResource(R.drawable.a);
         detailPlayer.setThumbImageView(imageView);
 
         resolveNormalVideoUI();
-
         //外部辅助的旋转，帮助全屏
         orientationUtils = new OrientationUtils(this, detailPlayer);
         //初始化不打开外部的旋转

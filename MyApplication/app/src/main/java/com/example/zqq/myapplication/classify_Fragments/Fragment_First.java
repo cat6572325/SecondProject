@@ -2,6 +2,7 @@ package com.example.zqq.myapplication.classify_Fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -41,6 +42,7 @@ import com.example.zqq.myapplication.MainActivity;
 import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.NetWorks.Post_Http;
 import com.example.zqq.myapplication.R;
+import com.example.zqq.myapplication.Third_class.DetailPlayer;
 import com.example.zqq.myapplication.Users.User;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
@@ -277,7 +279,12 @@ public class Fragment_First extends Fragment {
         second_adapter.setOnClickListener(new Second_Adapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(View view, int position) {
+                Bundle bundle=new Bundle();
+
                 Toast.makeText(getActivity(), position + "========Click:", Toast.LENGTH_SHORT).show();
+               Intent intent=new Intent(getActivity(), DetailPlayer.class);
+                intent.putExtra("videoposition", String.valueOf(position));
+                startActivity(intent);
 
 
             }
@@ -496,7 +503,7 @@ public class Fragment_First extends Fragment {
         //通过总数处以6来获得应该从哪一页开始获取视频
         Log.e("获取第",""+total+"页,"+countItems+"个视频");
         AsyncTasks.add(myAsycTask);
-        myAsycTask.execute("http://tp.newteo.com/video/?per=3&page=1");//获取最多点击数的三个视频
+        myAsycTask.execute("http://tp.newteo.com/video/sort/new?channel=hot&per=5&page="+countItems);//http://tp.newteo.com/video/?per=3&page=1");//获取最多点击数的三个视频
 
         //启动线程联网后就返回
         countItems++;

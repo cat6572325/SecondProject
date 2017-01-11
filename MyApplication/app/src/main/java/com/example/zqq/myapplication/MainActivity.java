@@ -94,12 +94,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                     if (bundle.getString("?").equals("封面上传成功"))
                     {
-                        uploading_t.setText("封面上传完成");
+                        uploading_t.setText("正在上传");
                         progress_t.setText(100+"%");
                     }
                     if (bundle.getString("?").equals("其他数据上传成功"))
                     {
-                        uploading_t.setText("其他数据上传完成");
+                        uploading_t.setText("正在上传。");
                         progress_t.setText(100+"%");
                     }
                     if (bundle.getString("?").equals("进度"))
