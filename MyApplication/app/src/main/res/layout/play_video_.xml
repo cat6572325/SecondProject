@@ -4,117 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/post_detail_nested_scroll"
+
+    <VideoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="190dp"
-        android:fillViewport="true">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="kkkkk"
-                android:id="@+id/player_title"
-                android:layout_marginLeft="30px"
-               android:layout_marginTop="60px"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="30px"
-                >
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@mipmap/watched_icon"
-    android:layout_gravity="center_vertical"
-    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:id="@+id/player_watched"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15px"
-                    android:text="1000"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#000000"
-                >
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                 <LinearLayout
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     >
-
-                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:layout_marginTop="30px"
-                    >
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@mipmap/liked"
-
-                        android:layout_marginRight="50px"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-
-                        android:layout_marginRight="50px"
-                        />
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@mipmap/commemt_icon"
-
-                        android:layout_marginRight="50px"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-
-                        android:layout_marginRight="50px"
-                        />
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@mipmap/more_icon"
-                        android:layout_marginRight="50px"
-                        />
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
-    <com.example.zqq.myapplication.Utils.LandLayoutVideo
-        android:id="@+id/detail_player"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
-
-
+        android:id="@+id/videoView" />
 </RelativeLayout>

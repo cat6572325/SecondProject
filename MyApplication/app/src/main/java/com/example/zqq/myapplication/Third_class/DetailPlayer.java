@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,7 +14,6 @@ import android.widget.RelativeLayout;
 import com.example.zqq.myapplication.Llisteners.SampleListener;
 import com.example.zqq.myapplication.R;
 import com.example.zqq.myapplication.Users.User;
-import com.example.zqq.myapplication.Utils.LandLayoutVideo;
 import com.shuyu.gsyvideoplayer.GSYPreViewManager;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 

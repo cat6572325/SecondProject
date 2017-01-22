@@ -27,7 +27,6 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.android.support:support-v4:25.0.1'
     compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.github.CarGuo:GSYVideoPlayer:v1.5.0'
     compile files('libs/okhttp-2.7.2.jar')
     compile 'com.zhousf.lib:okhttp3:2.5'
     compile 'com.github.zhaokaiqiang.okhttpplus:library:1.0.0'

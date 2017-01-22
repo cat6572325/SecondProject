@@ -18,7 +18,6 @@ import android.widget.*;
 
 import com.example.zqq.myapplication.R;
 import com.example.zqq.myapplication.classify_Fragments.Fragment_First;
-import com.shuyu.gsyvideoplayer.utils.ListVideoUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +32,6 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
     private ArrayList<HashMap<String, Object>> lists;
     private Context context;
     private List<Object> alllist;
-    ListVideoUtil listVideoUtil;
     MyViewHolder holder = null;
     Fragment_First f;
     private List<String> data = new ArrayList<>();
@@ -43,9 +41,7 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
     int[] layout = {R.layout.home_item_layout,R.layout.search_item_layout};//,R.layout.infodetail_of_item_title_three_buttons, R.layout.paid_item};
     private OnItemClickListener mListener;
     private OnLikeClickListener mLikeListener;
-    public void setListVideoUtil(final ListVideoUtil listVideoUtil) {
-        this.listVideoUtil=listVideoUtil;
-    }
+
 
 
     /**
@@ -84,11 +80,10 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
      */
 
 
-    public Second_Adapter(Context context, ArrayList<HashMap<String, Object>> lists, Fragment_First f,ListVideoUtil l) {
+    public Second_Adapter(Context context, ArrayList<HashMap<String, Object>> lists, Fragment_First f) {
         this.context = context;
         this.lists = lists;
         this.f=f;
-        this.listVideoUtil=l;
     }
 
     @Override
@@ -128,7 +123,6 @@ public class Second_Adapter extends RecyclerView.Adapter<MyViewHolder> {
                 //    holder.infoDetails_title_tv.setText(lists.get(position).get("name").toString());
                 //    holder.infoDetails_relativelayout.setTag(lists.get(position).get("vdoPhotourl").toString());
                 //设置内容背景图
-                holder.setListVideoUtil(listVideoUtil);
                 holder.onBind(position, lists.get(position)/*.get("vid_url").toString()*/, holder, this);
                 if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
                     holder.itemView.setOnClickListener(new View.OnClickListener() {

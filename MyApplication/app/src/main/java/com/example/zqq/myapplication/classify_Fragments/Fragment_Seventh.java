@@ -34,10 +34,7 @@ import com.example.zqq.myapplication.Llisteners.SampleListener;
 import com.example.zqq.myapplication.NetWorks.Get_Http_AsycTask;
 import com.example.zqq.myapplication.R;
 import com.example.zqq.myapplication.Users.User;
-import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
-import com.shuyu.gsyvideoplayer.utils.CommonUtil;
-import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.utils.ListVideoUtil;
+import com.example.zqq.myapplication.Utils.MyListVideoUti;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -170,7 +167,7 @@ public class Fragment_Seventh extends Fragment {
     private Second_Adapter second_adapter;
     //第三方刷新控件
     WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
-    public ListVideoUtil listVideoUtil;
+    public MyListVideoUti listVideoUtil;
     Get_Http_AsycTask get_http_asycTask;
     FrameLayout videoFullContainer;
     @Override
@@ -194,13 +191,6 @@ public class Fragment_Seventh extends Fragment {
 
 
     private void initView(View view) {
-        videoFullContainer=(FrameLayout) view.findViewById(R.id.video_full_container);
-        // 设置一个exit transition
-        listVideoUtil = new ListVideoUtil(getContext());
-        listVideoUtil.setFullViewContainer(videoFullContainer);
-
-
-        listVideoUtil.setHideActionBar(true);
 
 
         home_rec = (RecyclerView) view.findViewById(R.id.fragments_First_rv);
@@ -245,57 +235,11 @@ public class Fragment_Seventh extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                linearLayoutManager=(LinearLayoutManager)home_rec.getLayoutManager();
-                firstVisibleItem   = linearLayoutManager.findFirstVisibleItemPosition();
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                Debuger.printfLog("firstVisibleItem " + firstVisibleItem +" lastVisibleItem " + lastVisibleItem);
-                //大于0说明有播放,//对应的播放列表TAG
-                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(RecyclerItemViewHolder.TAG)*/) {
-                    //当前播放的位置
-                    int position = listVideoUtil.getPlayPosition();
-                    //不可视的是时候
-                    if ((position < firstVisibleItem || position > lastVisibleItem)) {
-                        //如果是小窗口就不需要处理
-                        if (!listVideoUtil.isSmall() && !listVideoUtil.isFull()) {
-                            //小窗口
-                            int size = CommonUtil.dip2px(getActivity(), 150);
-                            //actionbar为true才不会掉下面去
-                            listVideoUtil.showSmallVideo(new Point(size, size), true, true);
-                        }
-                    } else {
-                        if (listVideoUtil.isSmall()) {
-                            listVideoUtil.smallVideoToNormal();
-                        }
-                    }
-                }
-            }
-        });
 
-        //小窗口关闭被点击的时候回调处理回复页面
-        listVideoUtil.setVideoAllCallBack(new SampleListener() {
-            @Override
-            public void onPrepared(String url, Object... objects) {
-                super.onPrepared(url, objects);
-                Debuger.printfLog("Duration " + listVideoUtil.getDuration() + " CurrentPosition " + listVideoUtil.getCurrentPositionWhenPlaying());
-            }
-
-            @Override
-            public void onQuitSmallWidget(String url, Object... objects) {
-                super.onQuitSmallWidget(url, objects);
-                //大于0说明有播放,//对应的播放列表TAG
-                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(ListVideoAdapter.TAG)*/) {
-                    //当前播放的位置
-                    int position = listVideoUtil.getPlayPosition();
-                    //不可视的是时候
-                    if ((position < firstVisibleItem || position > lastVisibleItem)) {
-                        //释放掉视频
-                        listVideoUtil.releaseVideoPlayer();
-                        second_adapter.notifyDataSetChanged();
-                    }
-                }
 
             }
         });
+
 
     }
     private class Task extends AsyncTask<Void, Void, String[]> {
@@ -346,12 +290,7 @@ public class Fragment_Seventh extends Fragment {
             lists.clear();
             lists.addAll(Datalist);
 
-            listVideoUtil = new ListVideoUtil(getContext());
-            // second_adapter.setListVideoUtil(listVideoUtil);
-            listVideoUtil.setFullViewContainer(videoFullContainer);
-            listVideoUtil.setHideStatusBar(true);
-
-        }
+           }
         second_adapter.notifyDataSetChanged();
     }
     class MyAsycTask extends AsyncTask<String,Void,String>
