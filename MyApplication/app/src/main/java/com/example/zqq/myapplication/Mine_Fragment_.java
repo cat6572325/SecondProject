@@ -30,6 +30,7 @@ import com.example.zqq.myapplication.NetWorks.Post_Http;
 import com.example.zqq.myapplication.Third_class.Fans_;
 import com.example.zqq.myapplication.Third_class.Follow_;
 import com.example.zqq.myapplication.Third_class.Like_;
+import com.example.zqq.myapplication.Third_class.Peoper_Set_;
 import com.example.zqq.myapplication.Users.User;
 
 import java.io.IOError;
@@ -161,7 +162,8 @@ head_line.setOnClickListener(new View.OnClickListener() {
         User user=new User();
         if (user.id==null)
         {
-            registerpop();
+           // registerpop();
+            startActivity(new Intent(getContext(), Peoper_Set_.class));
         }
     }
 });
@@ -264,7 +266,7 @@ head_line.setOnClickListener(new View.OnClickListener() {
             }
         });
         User user=new User();
-        if (user.nickname!=null)
+        if (user.id!=null)
         {
             nickname.setText(user.nickname);
             nickname_l.setVisibility(View.VISIBLE);
@@ -407,8 +409,6 @@ head_line.setOnClickListener(new View.OnClickListener() {
                                     MyAsyncTask myAsycTask = new MyAsyncTask(map, formBody);
                                     login.setText("请稍等..");
                                     myAsycTask.execute("http://tp.newteo.com/login");
-
-
                                 }else{
                                     map.put("what", 0);
                                     login.setText("请稍等..");

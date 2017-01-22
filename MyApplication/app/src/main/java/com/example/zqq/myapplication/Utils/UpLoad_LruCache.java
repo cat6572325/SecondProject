@@ -164,6 +164,23 @@ public class UpLoad_LruCache {
             }.start();
         }
     }
+    public void loadImageViewPath(final String url, ImageView imageView, HashMap<String,Object> map)
+    {
+
+        this.imageView=imageView;
+        this.url=url;
+        this.map=map;
+        this.context=(Context)map.get("context");
+        Bitmap bitmap=lruCache.get(url);
+        //通过验证Path来获取头像
+        if (bitmap!=null)
+        {//如果缓存中由这张图片
+            if(imageView!=null)
+                imageView.setImageBitmap(bitmap);
+        }else {//否则通过联网下载
+
+        }
+    }
     //////////////////////////////////////////////////////以上设置头像/////////////////////////////////////////////////
 //////////////////////////////////////////////////////以下设置可见item/////////////////////////////////////////////////
 

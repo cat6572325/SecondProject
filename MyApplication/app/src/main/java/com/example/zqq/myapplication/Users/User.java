@@ -10,7 +10,7 @@ import java.util.HashMap;
  * Created by zqq on 16-12-30.
  */
 public class User {
-    public static String nickname=null,password=null,phone=null,headurl=null,token=null,id=null;
+    public static String nickname="未设置昵称",password=null,phone=null,headurl=null,token=null,id=null,sex="男";
     public static HashMap<String,Object> wait_UpLoad=null;
     public static ArrayList<HashMap<String,Object>> all_video=null,historys=null,Likes=null,Follows=null,favorites=null;
     public static HashMap<String,String> applications=null;

@@ -1,10 +1,13 @@
 package com.example.zqq.myapplication.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.zqq.myapplication.R;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -31,6 +36,7 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
             ,R.layout.nothink_item_ready
     ,R.layout.nothink_item_white
     ,R.layout.follow_item_layout
+            ,R.layout.picture_choose_item//选择图片的图片item布局
     };
     public Mine_Recycler_Adapter(ArrayList<HashMap<String,Object>> maps)
     {
@@ -126,6 +132,37 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
             case 4:
                 //我喜欢的
 
+                break;
+            case 7:
+                //选择图片
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(maps.get(position).get("image").toString());
+
+                Bitmap bitmap= BitmapFactory.decodeStream(fis);
+                holder.choose_image.setImageBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+                    Log.e("设置图片的adapter",e.toString());
+        }
+                if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
+                            mListener.onItemClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
+                        }
+
+
+                    });
+                    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
+                            mListener.onItemLongClickListener(holder.itemView, pos);//把事件交给我们实现的接口那里处理
+                            return true;
+                        }
+                    });
+                }
                 break;
         }
 

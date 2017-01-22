@@ -22,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -40,14 +42,14 @@ import okhttp3.RequestBody;
 /**
  * Created by zqq on 16-12-29.
  */
-public class Get_Http_AsycTask  {
+public class Get_Http_AsycTask extends Thread{
+
             private static final OkHttpClient client = new OkHttpClient.Builder()
             //设置超时，不设置可能会报异常
             .connectTimeout(3000, TimeUnit.MINUTES)
             .readTimeout(3000, TimeUnit.MINUTES)
             .writeTimeout(3000, TimeUnit.MINUTES)
             .build();
-
     Handler handler;
     LruCache<String,Bitmap> lruCache;//
     Message msg=null;
@@ -139,10 +141,41 @@ public class Get_Http_AsycTask  {
                     Message msg = Message.obtain();
                     msg.obj = bitmap;
                     msg.what = 3;
-                    handler.sendMessage(msg);
+
                 }
             }
         }.start();
+    }
+    public void GetGridViewImg(final HashMap<String,Object> map)
+    {
+        headimg=(ImageView)map.get("image");
+        Bitmap bitmap=(Bitmap)lruCache.get(map.get("path").toString());
+        if (bitmap!=null)
+        {
+            headimg.setImageBitmap(bitmap);
+        }else {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                  Bitmap  bitmap1 = null;
+                    if (bitmap1 != null) {
+                        try {
+                            FileInputStream fis=new FileInputStream(map.get("path").toString());
+                            bitmap1=BitmapFactory.decodeStream(fis);
+
+                        Message msg = new Message();
+                        msg.obj = bitmap1;
+                        msg.what = 0;
+                        handler.sendMessage(msg);
+
+                        } catch (FileNotFoundException e) {
+                        Log.e("获取gridview图片时",e.toString());
+                    }
+                    }
+                }
+            }.start();
+        }
     }
     public void gethttp(String url, final HashMap<String,Object> map)
     {

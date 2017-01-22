@@ -44,7 +44,10 @@ import com.example.zqq.myapplication.NetWorks.Post_Http;
 import com.example.zqq.myapplication.R;
 import com.example.zqq.myapplication.Third_class.DetailPlayer;
 import com.example.zqq.myapplication.Users.User;
-import com.example.zqq.myapplication.Utils.MyListVideoUti;
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.utils.CommonUtil;
+import com.shuyu.gsyvideoplayer.utils.Debuger;
+import com.shuyu.gsyvideoplayer.utils.ListVideoUtil;
 import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONArray;
@@ -224,7 +227,7 @@ public class Fragment_First extends Fragment {
     private Second_Adapter second_adapter;
     //第三方刷新控件
     public WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
-    public MyListVideoUti listVideoUtil;
+    public ListVideoUtil listVideoUtil;
     Get_Http_AsycTask get_http_asycTask;
     FrameLayout videoFullContainer;
      @Override
@@ -250,7 +253,7 @@ public class Fragment_First extends Fragment {
     private void initView(View view) {
          videoFullContainer=(FrameLayout) view.findViewById(R.id.video_full_container);
         // 设置一个exit transition
-         listVideoUtil = new MyListVideoUti(getContext());
+         listVideoUtil = new ListVideoUtil(getContext());
         listVideoUtil.setFullViewContainer(videoFullContainer);
         listVideoUtil.setHideActionBar(true);
         home_rec = (RecyclerView) view.findViewById(R.id.fragments_First_rv);
@@ -258,7 +261,7 @@ public class Fragment_First extends Fragment {
         mWaveSwipeRefreshLayout.setColorSchemeColors(Color.RED, Color.RED);
         //mWaveSwipeRefreshLayout.setWaveColor(Color.argb(100,255,0,0));
         mWaveSwipeRefreshLayout.setWaveColor(0xffff0000);
-        second_adapter = new Second_Adapter(getActivity(), lists,this);
+        second_adapter = new Second_Adapter(getActivity(), lists,this,listVideoUtil);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
         home_rec.setLayoutManager(gridLayoutManager);
         home_rec.setAdapter(second_adapter);
@@ -304,6 +307,7 @@ public class Fragment_First extends Fragment {
                     map.put("context", getContext());
                     map.put("body", formBody);
                     map.put("method", "post");
+                    addOrclerLike(map);
                     ImageView img_like=(ImageView)view.findViewById(R.id.like_img);
                     if (img_like.getTag().equals("没有点过"))
                     {
@@ -324,6 +328,7 @@ public class Fragment_First extends Fragment {
         mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+             getVideos();
 
             }
         });
@@ -336,22 +341,76 @@ public class Fragment_First extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                linearLayoutManager = (LinearLayoutManager) home_rec.getLayoutManager();
-                firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+                linearLayoutManager=(LinearLayoutManager)home_rec.getLayoutManager();
+                firstVisibleItem   = linearLayoutManager.findFirstVisibleItemPosition();
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                User user = new User();//假如这样频繁的申明和消除实例会给系统造成负担，就得换一种方式了
-                if (user.get_http == null) {
-                    user.get_http = new Get_Http_AsycTask();
-                    user.get_http.initlrucache();
+                Debuger.printfLog("firstVisibleItem " + firstVisibleItem +" lastVisibleItem " + lastVisibleItem);
+                //大于0说明有播放,//对应的播放列表TAG
+                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(RecyclerItemViewHolder.TAG)*/)
+                {
+                    //当前播放的位置
+                    int position = listVideoUtil.getPlayPosition();
+                    //不可视的是时候
+                    if ((position < firstVisibleItem || position > lastVisibleItem)) {
+                        //如果是小窗口就不需要处理
+                        if (!listVideoUtil.isSmall() && !listVideoUtil.isFull()) {
+                            //小窗口
+                            int size = CommonUtil.dip2px(getActivity(), 150);
+                            //actionbar为true才不会掉下面去
+                            listVideoUtil.showSmallVideo(new Point(size, size), true, true);
+
+                        }
+                    } else {
+                        if (listVideoUtil.isSmall()) {
+                            listVideoUtil.smallVideoToNormal();
+                        }
+                    }
+                }else
+                {
+                    User user=new User();//假如这样频繁的申明和消除实例会给系统造成负担，就得换一种方式了
+                    if (user.get_http==null) {
+                        user.get_http = new Get_Http_AsycTask();
+                        user.get_http.initlrucache();
+                    }
+                        HashMap<String,Object> map=new HashMap<String, Object>();
+                        map.put("?","Fragment_First");
+                        map.put("recyclerview",home_rec);
+                    map.put("handler",mHandler);
+                        user.get_http.loadurl(
+                                linearLayoutManager.findFirstVisibleItemPosition()
+                                , linearLayoutManager.findLastVisibleItemPosition()
+                                , map);
+
                 }
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("?", "Fragment_First");
-                map.put("recyclerview", home_rec);
-                map.put("handler", mHandler);
-                user.get_http.loadurl(
-                        linearLayoutManager.findFirstVisibleItemPosition()
-                        , linearLayoutManager.findLastVisibleItemPosition()
-                        , map);
+            }
+        });
+
+        //小窗口关闭被点击的时候回调处理回复页面
+        listVideoUtil.setVideoAllCallBack(new SampleListener() {
+            @Override
+            public void onPrepared(String url, Object... objects) {
+                super.onPrepared(url, objects);
+                Debuger.printfLog("Duration " + listVideoUtil.getDuration() + " CurrentPosition " + listVideoUtil.getCurrentPositionWhenPlaying());
+            }
+
+            @Override
+            public void onQuitSmallWidget(String url, Object... objects) {
+                super.onQuitSmallWidget(url, objects);
+                linearLayoutManager = (LinearLayoutManager) home_rec.getLayoutManager();
+
+                //大于0说明有播放,//对应的播放列表TAG
+                if (listVideoUtil.getPlayPosition() >= 0 /*&& listVideoUtil.getPlayTAG().equals(ListVideoAdapter.TAG)*/)
+                {
+                    //当前播放的位置
+                    int position = listVideoUtil.getPlayPosition();
+                    //不可视的时候
+                    if ((position < firstVisibleItem || position > lastVisibleItem)) {
+                        //释放掉视频
+                        listVideoUtil.releaseVideoPlayer();
+                        second_adapter.notifyDataSetChanged();
+                    }
+                }
+
 
             }
         });
@@ -484,7 +543,7 @@ public class Fragment_First extends Fragment {
             map1.put("text","大家都在搜");
             lists.add(map1);
             lists.addAll(Datalist);
-            listVideoUtil = new MyListVideoUti(getContext());
+            listVideoUtil = new ListVideoUtil(getContext());
             // second_adapter.setListVideoUtil(listVideoUtil);
             listVideoUtil.setFullViewContainer(videoFullContainer);
             listVideoUtil.setHideStatusBar(true);

@@ -46,6 +46,8 @@
         <activity android:name=".Third_class.Like_"></activity>
         <activity android:name="New_round"></activity>
         <activity android:name=".Third_class.DetailPlayer"></activity>
+        <activity android:name=".Third_class.Peoper_Set_"/>
+        <activity android:name=".Third_class.Picture_Choose_"></activity>
     </application>
 
 </manifest>
