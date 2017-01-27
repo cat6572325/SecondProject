@@ -186,7 +186,7 @@ public class Peoper_Set_ extends AppCompatActivity {
 
     public void peoper_set_headImg(View view)
     {
-        startActivity(new Intent(Peoper_Set_.this,Picture_Choose_.class));
+        startActivityForResult(new Intent(Peoper_Set_.this,Picture_Choose_.class),0);
     }
     public void peoper_set_back(View view) {
         finish();
@@ -278,6 +278,20 @@ private void initView()
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode)
+        {
+            case 0:
+                //头像返回地址
+                String path=data.getDataString();
+                Bundle bundle = data.getExtras();
+                Log.e("头像返回地址",path);
+                break;
         }
     }
 }

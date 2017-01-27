@@ -88,6 +88,7 @@
         />
     <ImageView
         android:layout_width="wrap_content"
+        android:id="@+id/peoper_set_head_img"
         android:layout_height="wrap_content"
         android:background="@mipmap/oval_7"
         android:layout_centerVertical="true"

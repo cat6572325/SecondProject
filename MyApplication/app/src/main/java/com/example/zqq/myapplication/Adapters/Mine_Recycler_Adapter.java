@@ -23,45 +23,49 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>  {
+public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder> {
 
     Recycler_Holder holder;
     private OnItemClickListener mListener;
     Context context;
-    ArrayList<HashMap<String,Object>>  maps;
+    ArrayList<HashMap<String, Object>> maps;
     int[] layout = {R.layout.mine_recyclerview_item_layout
-            ,R.layout.pop_recycler_item_layout
-            ,R.layout.history_recyclerview_item_layout
-            ,R.layout.nothing_item_layout
-            ,R.layout.nothink_item_ready
-    ,R.layout.nothink_item_white
-    ,R.layout.follow_item_layout
-            ,R.layout.picture_choose_item//选择图片的图片item布局
+            , R.layout.pop_recycler_item_layout
+            , R.layout.history_recyclerview_item_layout
+            , R.layout.nothing_item_layout
+            , R.layout.nothink_item_ready
+            , R.layout.nothink_item_white
+            , R.layout.follow_item_layout
+            , R.layout.picture_choose_item//选择图片的图片item布局
     };
-    public Mine_Recycler_Adapter(ArrayList<HashMap<String,Object>> maps)
-    {
-        this.maps=maps;
+
+    public Mine_Recycler_Adapter(ArrayList<HashMap<String, Object>> maps) {
+        this.maps = maps;
     }
 
     @Override
     public Recycler_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        context=null;
-        context=(Context)maps.get(0).get("context");
+        context = null;
+        context = (Context) maps.get(0).get("context");
         view = LayoutInflater.from(context).inflate(layout[viewType], parent, false);
-      holder = new Recycler_Holder(view);
+        holder = new Recycler_Holder(view);
 
         return holder;
 
     }
+
     public interface OnItemClickListener {
         void onItemClickListener(View view, int position);//点击
 
         void onItemLongClickListener(View view, int position);//长按
     }
+
+
     public void setOnClickListener(OnItemClickListener listener) {
         this.mListener = listener;
     }
+
 
     @Override
     public void onBindViewHolder(final Recycler_Holder holder, int position) {
@@ -69,14 +73,13 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
 
         holder.itemView.setLayoutParams(params);//把params设置给item布局
 
-        switch (getItemViewType(position))
-        {
+        switch (getItemViewType(position)) {
 
             case 0:
                 //TODO 我的信息面板
                 holder.title.setText(maps.get(position).get("title").toString());
                 if (maps.get(position).containsKey("icon_id"))
-                holder.item_icon.setBackgroundResource((int)maps.get(position).get("icon_id"));
+                    holder.item_icon.setBackgroundResource((int) maps.get(position).get("icon_id"));
 
                 if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -139,13 +142,15 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
                 try {
                     fis = new FileInputStream(maps.get(position).get("image").toString());
 
-                Bitmap bitmap= BitmapFactory.decodeStream(fis);
-                holder.choose_image.setImageBitmap(bitmap);
-        } catch (FileNotFoundException e) {
-                    Log.e("设置图片的adapter",e.toString());
-        }
+                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                    holder.choose_image.setImageBitmap(bitmap);
+                    holder.choose_image.setTag(maps.get(position).get("image").toString());
+
+                } catch (FileNotFoundException e) {
+                    Log.e("设置图片的adapter", e.toString());
+                }
                 if (mListener != null) {//如果设置了监听那么它就不为空，然后回调相应的方法
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    holder.mengceng_img.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
@@ -154,7 +159,7 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
 
 
                     });
-                    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    holder.mengceng_img.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
                             int pos = holder.getLayoutPosition();//得到当前点击item的位置pos
@@ -163,6 +168,7 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
                         }
                     });
                 }
+
                 break;
         }
 
@@ -176,6 +182,6 @@ public class Mine_Recycler_Adapter extends RecyclerView.Adapter<Recycler_Holder>
 
     @Override
     public int getItemViewType(int position) {
-        return (int)maps.get(position).get("layout");
+        return (int) maps.get(position).get("layout");
     }
 }

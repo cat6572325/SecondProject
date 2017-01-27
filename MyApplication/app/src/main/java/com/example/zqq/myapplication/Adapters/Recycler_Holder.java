@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Created by zqq on 17-1-4.
  */
 public class Recycler_Holder extends RecyclerView.ViewHolder {
-    ImageView item_icon,History_img,choose_image;
+    ImageView item_icon,History_img,choose_image,mengceng_img;
     TextView title,History_title,History_peop,History_create_time;
     TextView popwindow_recycler_item_t,nothink_item_t;
     RelativeLayout relativeLayout;
@@ -27,6 +27,7 @@ public class Recycler_Holder extends RecyclerView.ViewHolder {
         relativeLayout=(RelativeLayout)itemView.findViewById(R.id.recy_item_rela);
         popwindow_recycler_item_t=(TextView) itemView.findViewById(R.id.popupwind_recyclerView_item_t);
         choose_image=(ImageView)itemView.findViewById(R.id.picture_choose_item_img);
+        mengceng_img=(ImageView)itemView.findViewById(R.id.mengceng_img);
 
         History_create_time=(TextView)itemView.findViewById(R.id.History_Create_time);
         History_peop=(TextView)itemView.findViewById(R.id.History_peop);
